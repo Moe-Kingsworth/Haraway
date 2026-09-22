@@ -1,4 +1,4 @@
-//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-BQdO_lno.js
+//#region node_modules/.nitro/vite/services/ssr/assets/_tanstack-start-manifest_v-C3Ipy2SB.js
 var tsrStartManifest = () => ({ routes: {
 	__root__: {
 		filePath: "/workspace/src/routes/__root.tsx",
@@ -16,10 +16,12 @@ var tsrStartManifest = () => ({ routes: {
 			"/settings",
 			"/staff",
 			"/tasks",
+			"/deals_/$id",
+			"/receipts_/$id",
 			"/api/auth/$"
 		],
 		preloads: [
-			"/assets/index-D3cgbYJH.js",
+			"/assets/index-D18T69oy.js",
 			"/assets/react-SIfiwpqq.js",
 			"/assets/useNavigate-DdoJdqLc.js",
 			"/assets/preload-helper-DfYxEcjl.js",
@@ -28,16 +30,16 @@ var tsrStartManifest = () => ({ routes: {
 		scripts: [{ attrs: {
 			type: "module",
 			async: !0,
-			src: "/assets/index-D3cgbYJH.js"
+			src: "/assets/index-D18T69oy.js"
 		} }]
 	},
 	"/": {
 		filePath: "/workspace/src/routes/index.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/routes-Cz5Ji9Iz.js",
+			"/assets/routes-C1FLUe3o.js",
 			"/assets/app-shell-ByijkzK6.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/page-header-s2M92mm9.js",
@@ -51,9 +53,9 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/attendance.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/attendance-D1xAII6r.js",
+			"/assets/attendance-BkYNH8p8.js",
 			"/assets/app-shell-ByijkzK6.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -69,10 +71,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/clients.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/clients-CAJVEz_3.js",
+			"/assets/clients-CyQDpu5m.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/empty-state-BlPtnr8w.js",
 			"/assets/page-header-s2M92mm9.js",
@@ -88,12 +90,12 @@ var tsrStartManifest = () => ({ routes: {
 	},
 	"/deals": {
 		filePath: "/workspace/src/routes/deals.tsx",
-		children: ["/deals/$id"],
+		children: void 0,
 		preloads: [
-			"/assets/deals-C_qD1QSV.js",
+			"/assets/deals-DKWqmrNI.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -112,10 +114,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/desk.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/desk-BcyEOqyC.js",
+			"/assets/desk-CJwHgEXd.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/page-header-s2M92mm9.js",
@@ -142,9 +144,9 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/payroll.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/payroll-CXp8a5AA.js",
+			"/assets/payroll-Bwaqe25W.js",
 			"/assets/app-shell-ByijkzK6.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -159,10 +161,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/performance.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/performance-xEpHAZQY.js",
+			"/assets/performance-DC9EVVIu.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/empty-state-BlPtnr8w.js",
 			"/assets/page-header-s2M92mm9.js",
@@ -178,10 +180,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/properties.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/properties-LovLtHka.js",
+			"/assets/properties-BNXP4q7K.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -197,12 +199,12 @@ var tsrStartManifest = () => ({ routes: {
 	},
 	"/receipts": {
 		filePath: "/workspace/src/routes/receipts.tsx",
-		children: ["/receipts/$id"],
+		children: void 0,
 		preloads: [
-			"/assets/receipts-D71vjMHe.js",
+			"/assets/receipts-FF8tF-K_.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -219,9 +221,9 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/settings.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/settings-wVvJ3w_t.js",
+			"/assets/settings-BgLHslvR.js",
 			"/assets/app-shell-ByijkzK6.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/page-header-s2M92mm9.js",
 			"/assets/card-BzqIXeDn.js",
@@ -232,10 +234,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/staff.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/staff-DKBp9b6D.js",
+			"/assets/staff-Btgfovpg.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -253,10 +255,10 @@ var tsrStartManifest = () => ({ routes: {
 		filePath: "/workspace/src/routes/tasks.tsx",
 		children: void 0,
 		preloads: [
-			"/assets/tasks-4D3NwLrU.js",
+			"/assets/tasks-DRH_V9RW.js",
 			"/assets/app-shell-ByijkzK6.js",
 			"/assets/select-DewUhcYf.js",
-			"/assets/useMutation-DKtKrhna.js",
+			"/assets/useMutation-DAjYf11I.js",
 			"/assets/dist-Qx_yZF4y.js",
 			"/assets/format-B7IagXdN.js",
 			"/assets/empty-state-BlPtnr8w.js",
@@ -270,15 +272,34 @@ var tsrStartManifest = () => ({ routes: {
 			"/assets/textarea-DUIgIebM.js"
 		]
 	},
-	"/deals/$id": {
-		filePath: "/workspace/src/routes/deals.$id.tsx",
+	"/deals_/$id": {
+		filePath: "/workspace/src/routes/deals_.$id.tsx",
 		children: void 0,
-		preloads: ["/assets/deals._id-5ioSRYso.js"]
+		preloads: [
+			"/assets/deals_._id-CU_Lpohi.js",
+			"/assets/app-shell-ByijkzK6.js",
+			"/assets/select-DewUhcYf.js",
+			"/assets/useMutation-DAjYf11I.js",
+			"/assets/dist-Qx_yZF4y.js",
+			"/assets/format-B7IagXdN.js",
+			"/assets/constants-DmfRhrxf.js",
+			"/assets/status-badge-Hws_ChVY.js",
+			"/assets/dialog-C7LMJldZ.js",
+			"/assets/label-CKiG8un9.js",
+			"/assets/textarea-DUIgIebM.js",
+			"/assets/crm-C-Q9wC4q.js"
+		]
 	},
-	"/receipts/$id": {
-		filePath: "/workspace/src/routes/receipts.$id.tsx",
+	"/receipts_/$id": {
+		filePath: "/workspace/src/routes/receipts_.$id.tsx",
 		children: void 0,
-		preloads: ["/assets/receipts._id-DAFPcOfY.js"]
+		preloads: [
+			"/assets/receipts_._id-BqtFZeXa.js",
+			"/assets/app-shell-ByijkzK6.js",
+			"/assets/dist-Qx_yZF4y.js",
+			"/assets/format-B7IagXdN.js",
+			"/assets/crm-C-Q9wC4q.js"
+		]
 	}
 } });
 //#endregion

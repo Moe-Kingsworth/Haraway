@@ -1,5 +1,43 @@
 {
-  "ok": false,
   "url": "http://127.0.0.1:8081/",
-  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8081/\nCall log:\n  - navigating to \"http://127.0.0.1:8081/\", waiting until \"domcontentloaded\"\n"
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "Aso Terrace",
+      "hasCanvas": false,
+      "bodyTextLen": 67,
+      "bodyTextHash": "297cb9fd519ce42bbc3a049692f6fc25a109933372d47369b20bf2555a1cc805",
+      "bodyTextPrefix": "Aso Terrace ABUJA Loading the desk… ASO TERRACE The operations d",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "Aso Terrace",
+      "hasCanvas": false,
+      "bodyTextLen": 31,
+      "bodyTextHash": "f32b48c681758c77e9dd3c7119fe8d2d38abfc799654ee63bb5f8d0d6a9b679e",
+      "bodyTextPrefix": "ASO TERRACE The operations desk",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-built-mobile.png"
+    }
+  },
+  "brandWarnings": [
+    "BRAND NOTE: no custom public/og.jpg — the platform will serve the og.grok.me placeholder. Custom cards are the default for games of every kind (DOM board/word games included), whimsical apps, creative tools, and brand-forward pages — only plain utilities (converters, CRUD trackers, admin dashboards) keep the placeholder. If this app is not a plain utility, finish the brand-asset pass per /workspace/.grok/skills/og/SKILL.md."
+  ],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-built.json",
+  "divergesFromBaseline": true,
+  "baselineReasons": [
+    "desktop: body text collapsed (483 -> 67 chars)",
+    "mobile: body text collapsed (244 -> 31 chars)"
+  ]
 }

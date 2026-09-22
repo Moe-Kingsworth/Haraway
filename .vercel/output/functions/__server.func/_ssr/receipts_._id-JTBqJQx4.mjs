@@ -5,8 +5,8 @@ import { n as Wordmark, t as Button } from "./button-BS70WMgP.mjs";
 import { n as useQuery } from "../_libs/tanstack__react-query.mjs";
 import { t as AppShell } from "./app-shell-C3mSjfCF.mjs";
 import { r as getPayment } from "./crm-Dhws9iQH.mjs";
-import { n as Route$1 } from "./router-BZGjt61B.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/receipts._id-CJk16My8.js
+import { n as Route$1 } from "./router--Tq7Vjsr.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/receipts_._id-JTBqJQx4.js
 var import_jsx_runtime = require_jsx_runtime();
 function ReceiptPrint() {
 	const { id } = Route$1.useParams();

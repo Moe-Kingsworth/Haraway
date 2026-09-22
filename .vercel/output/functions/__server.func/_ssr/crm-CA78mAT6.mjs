@@ -3,7 +3,7 @@ import { t as createServerRpc } from "./createServerRpc-CcvdN_gc.mjs";
 import { r as getSql } from "./db-DamQGqw7.mjs";
 import { n as authMiddleware } from "./format-Tz25-cit.mjs";
 import { a as num, n as dateStr, o as resolveAccess, s as tsStr, t as assertAdmin } from "./access-BBPyLmQY.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/crm-BQz_yLMl.js
+//#region node_modules/.nitro/vite/services/ssr/assets/crm-CA78mAT6.js
 var listClients_createServerFn_handler = createServerRpc({
 	id: "c1db5569404235c31597f22f3305a9d5227aef7a96072cb9cbc23397ff1af32e",
 	name: "listClients",
@@ -281,7 +281,8 @@ var createPayment = createServerFn({ method: "POST" }).middleware([authMiddlewar
 	if (access.role !== "admin") throw new Error("Only the operations desk can issue receipts.");
 	const sql = await getSql();
 	const count = await sql`
-      select count(*)::int as n from payments where user_id = ${access.ownerId}
+      select coalesce(max(nullif(substring(receipt_no from '[0-9]+$'), '')::int), 0)::int as n
+      from payments where user_id = ${access.ownerId}
     `;
 	const receiptNo = `AT-RCP-${(/* @__PURE__ */ new Date()).getFullYear()}-${String((count[0]?.n ?? 0) + 1).padStart(3, "0")}`;
 	return {

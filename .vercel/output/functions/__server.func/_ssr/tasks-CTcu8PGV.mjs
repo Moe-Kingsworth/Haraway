@@ -17,7 +17,7 @@ import { a as DialogTitle, i as DialogHeader, n as DialogContent, r as DialogFoo
 import { n as Label, t as Input } from "./label-BC8fU-lS.mjs";
 import { t as Textarea } from "./textarea-Bp7dnapg.mjs";
 import { a as SelectValue, i as SelectTrigger, n as SelectContent, r as SelectItem, t as Select } from "./select-DwnO6F4h.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/tasks-DUJFZ-7C.js
+//#region node_modules/.nitro/vite/services/ssr/assets/tasks-CTcu8PGV.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var COLS = [
@@ -81,65 +81,68 @@ function TasksPage() {
 			}) : null
 		}),
 		tasks.isLoading ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
-			children: Array.from({ length: 4 }).map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, { className: "h-40 rounded-xl" }, i))
+			className: "flex gap-4 overflow-x-auto pb-2",
+			children: Array.from({ length: 4 }).map((_, i) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Skeleton, { className: "h-40 w-64 shrink-0 rounded-xl" }, i))
 		}) : (tasks.data ?? []).length === 0 ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)(EmptyState, {
 			title: "The board is empty",
 			hint: "Assign the first piece of work."
 		}) : /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-			className: "grid gap-4 md:grid-cols-2 xl:grid-cols-4",
-			children: COLS.map((col) => {
-				const items = (tasks.data ?? []).filter((t) => t.status === col);
-				return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-					className: "min-w-0",
-					children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-						className: "mb-2 text-xs font-medium tracking-widest text-muted-foreground uppercase",
-						children: col === "todo" ? "To do" : col === "doing" ? "In hand" : col
-					}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-						className: "space-y-2",
-						children: items.map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
-							className: cn("cursor-pointer"),
-							onClick: () => {
-								setEditing(t);
-								setOpen(true);
-							},
-							children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
-								className: "space-y-2 p-4",
-								children: [
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										className: "text-sm font-medium",
-										children: t.title
-									}),
-									/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
-										className: "flex flex-wrap items-center gap-2",
-										children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StatusBadge, { value: t.priority }), t.dueDate ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+			className: "-mx-4 overflow-x-auto px-4 md:mx-0 md:px-0",
+			children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+				className: "flex min-w-max gap-4 pb-2 xl:min-w-0 xl:grid xl:grid-cols-4",
+				children: COLS.map((col) => {
+					const items = (tasks.data ?? []).filter((t) => t.status === col);
+					return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+						className: "w-64 shrink-0 xl:w-auto",
+						children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+							className: "mb-2 text-xs font-medium tracking-widest text-muted-foreground uppercase",
+							children: col === "todo" ? "To do" : col === "doing" ? "In hand" : col
+						}), /* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+							className: "space-y-2",
+							children: items.map((t) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Card, {
+								className: cn("cursor-pointer overflow-hidden"),
+								onClick: () => {
+									setEditing(t);
+									setOpen(true);
+								},
+								children: /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(CardContent, {
+									className: "space-y-2 p-4",
+									children: [
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
+											className: "text-sm font-medium break-words",
+											children: t.title
+										}),
+										/* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {
+											className: "flex flex-wrap items-center gap-2",
+											children: [/* @__PURE__ */ (0, import_jsx_runtime.jsx)(StatusBadge, { value: t.priority }), t.dueDate ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("span", {
+												className: "text-xs text-muted-foreground",
+												children: formatDate(t.dueDate)
+											}) : null]
+										}),
+										t.staffName ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
 											className: "text-xs text-muted-foreground",
-											children: formatDate(t.dueDate)
-										}) : null]
-									}),
-									t.staffName ? /* @__PURE__ */ (0, import_jsx_runtime.jsx)("p", {
-										className: "text-xs text-muted-foreground",
-										children: t.staffName
-									}) : null,
-									/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
-										className: "flex flex-wrap gap-1",
-										onClick: (e) => e.stopPropagation(),
-										children: COLS.filter((c) => c !== t.status).map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
-											size: "sm",
-											variant: "ghost",
-											className: "h-7 px-2 text-xs",
-											onClick: () => move.mutate({
-												id: t.id,
-												status: c
-											}),
-											children: c === "todo" ? "To do" : c === "doing" ? "In hand" : c
-										}, c))
-									})
-								]
-							})
-						}, t.id))
-					})]
-				}, col);
+											children: t.staffName
+										}) : null,
+										/* @__PURE__ */ (0, import_jsx_runtime.jsx)("div", {
+											className: "flex flex-wrap gap-1",
+											onClick: (e) => e.stopPropagation(),
+											children: COLS.filter((c) => c !== t.status).map((c) => /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Button, {
+												size: "sm",
+												variant: "ghost",
+												className: "h-7 px-2 text-xs",
+												onClick: () => move.mutate({
+													id: t.id,
+													status: c
+												}),
+												children: c === "todo" ? "To do" : c === "doing" ? "In hand" : c
+											}, c))
+										})
+									]
+								})
+							}, t.id))
+						})]
+					}, col);
+				})
 			})
 		}),
 		/* @__PURE__ */ (0, import_jsx_runtime.jsx)(TaskDialog, {

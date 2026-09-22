@@ -10,7 +10,7 @@ import { i as TriangleAlert } from "../_libs/lucide-react.mjs";
 import { r as QueryClientProvider } from "../_libs/tanstack__react-query.mjs";
 import { t as QueryClient } from "../_libs/tanstack__query-core.mjs";
 import { t as Toaster } from "../_libs/sonner.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/router-BZGjt61B.js
+//#region node_modules/.nitro/vite/services/ssr/assets/router--Tq7Vjsr.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 var FALLBACK_MESSAGE = "An unexpected error occurred. Try reloading the page.";
@@ -311,7 +311,7 @@ function Toaster$1() {
 		toastOptions: { classNames: { toast: "bg-card text-foreground border-border shadow-soft" } }
 	});
 }
-var styles_default = "/assets/styles-DGb4_V1P.css";
+var styles_default = "/assets/styles-D5zNP-7o.css";
 var APP_NAME = "Aso Terrace";
 var fetchSessionUser = createServerFn({ method: "GET" }).handler(createSsrRpc("2c4985e96c199268f7f639534cb5e8e31d6b19d43286bf77416413db60ffde26"));
 var Route$16 = createRootRoute({
@@ -406,114 +406,97 @@ var $$splitComponentImporter$4 = () => import("./settings-MvceVHVR.mjs");
 var Route$5 = createFileRoute("/settings")({ component: lazyRouteComponent($$splitComponentImporter$4, "component") });
 var $$splitComponentImporter$3 = () => import("./staff-BJSkwvF3.mjs");
 var Route$4 = createFileRoute("/staff")({ component: lazyRouteComponent($$splitComponentImporter$3, "component") });
-var $$splitComponentImporter$2 = () => import("./tasks-DUJFZ-7C.mjs");
+var $$splitComponentImporter$2 = () => import("./tasks-CTcu8PGV.mjs");
 var Route$3 = createFileRoute("/tasks")({ component: lazyRouteComponent($$splitComponentImporter$2, "component") });
-var $$splitComponentImporter$1 = () => import("./deals._id-D2_vK9zO.mjs");
-var Route$2 = createFileRoute("/deals/$id")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
-var $$splitComponentImporter = () => import("./receipts._id-CJk16My8.mjs");
-var Route$1 = createFileRoute("/receipts/$id")({ component: lazyRouteComponent($$splitComponentImporter, "component") });
+var $$splitComponentImporter$1 = () => import("./deals_._id-XquRclR5.mjs");
+var Route$2 = createFileRoute("/deals_/$id")({ component: lazyRouteComponent($$splitComponentImporter$1, "component") });
+var $$splitComponentImporter = () => import("./receipts_._id-JTBqJQx4.mjs");
+var Route$1 = createFileRoute("/receipts_/$id")({ component: lazyRouteComponent($$splitComponentImporter, "component") });
 var Route = createFileRoute("/api/auth/$")({ server: { handlers: {
 	GET: ({ request }) => auth.handler(request),
 	POST: ({ request }) => auth.handler(request)
 } } });
-var IndexRoute = Route$15.update({
-	id: "/",
-	path: "/",
-	getParentRoute: () => Route$16
-});
-var AttendanceRoute = Route$14.update({
-	id: "/attendance",
-	path: "/attendance",
-	getParentRoute: () => Route$16
-});
-var ClientsRoute = Route$13.update({
-	id: "/clients",
-	path: "/clients",
-	getParentRoute: () => Route$16
-});
-var DealsRoute = Route$12.update({
-	id: "/deals",
-	path: "/deals",
-	getParentRoute: () => Route$16
-});
-var DeskRoute = Route$11.update({
-	id: "/desk",
-	path: "/desk",
-	getParentRoute: () => Route$16
-});
-var LoginRoute = Route$10.update({
-	id: "/login",
-	path: "/login",
-	getParentRoute: () => Route$16
-});
-var PayrollRoute = Route$9.update({
-	id: "/payroll",
-	path: "/payroll",
-	getParentRoute: () => Route$16
-});
-var PerformanceRoute = Route$8.update({
-	id: "/performance",
-	path: "/performance",
-	getParentRoute: () => Route$16
-});
-var PropertiesRoute = Route$7.update({
-	id: "/properties",
-	path: "/properties",
-	getParentRoute: () => Route$16
-});
-var ReceiptsRoute = Route$6.update({
-	id: "/receipts",
-	path: "/receipts",
-	getParentRoute: () => Route$16
-});
-var SettingsRoute = Route$5.update({
-	id: "/settings",
-	path: "/settings",
-	getParentRoute: () => Route$16
-});
-var StaffRoute = Route$4.update({
-	id: "/staff",
-	path: "/staff",
-	getParentRoute: () => Route$16
-});
-var TasksRoute = Route$3.update({
-	id: "/tasks",
-	path: "/tasks",
-	getParentRoute: () => Route$16
-});
-var DealsIdRoute = Route$2.update({
-	id: "/$id",
-	path: "/$id",
-	getParentRoute: () => DealsRoute
-});
-var ReceiptsIdRoute = Route$1.update({
-	id: "/$id",
-	path: "/$id",
-	getParentRoute: () => ReceiptsRoute
-});
-var ApiAuthSplatRoute = Route.update({
-	id: "/api/auth/$",
-	path: "/api/auth/$",
-	getParentRoute: () => Route$16
-});
-var DealsRouteChildren = { DealsIdRoute };
-var DealsRouteWithChildren = DealsRoute._addFileChildren(DealsRouteChildren);
-var ReceiptsRouteChildren = { ReceiptsIdRoute };
 var rootRouteChildren = {
-	IndexRoute,
-	AttendanceRoute,
-	ClientsRoute,
-	DealsRoute: DealsRouteWithChildren,
-	DeskRoute,
-	LoginRoute,
-	PayrollRoute,
-	PerformanceRoute,
-	PropertiesRoute,
-	ReceiptsRoute: ReceiptsRoute._addFileChildren(ReceiptsRouteChildren),
-	SettingsRoute,
-	StaffRoute,
-	TasksRoute,
-	ApiAuthSplatRoute
+	IndexRoute: Route$15.update({
+		id: "/",
+		path: "/",
+		getParentRoute: () => Route$16
+	}),
+	AttendanceRoute: Route$14.update({
+		id: "/attendance",
+		path: "/attendance",
+		getParentRoute: () => Route$16
+	}),
+	ClientsRoute: Route$13.update({
+		id: "/clients",
+		path: "/clients",
+		getParentRoute: () => Route$16
+	}),
+	DealsRoute: Route$12.update({
+		id: "/deals",
+		path: "/deals",
+		getParentRoute: () => Route$16
+	}),
+	DeskRoute: Route$11.update({
+		id: "/desk",
+		path: "/desk",
+		getParentRoute: () => Route$16
+	}),
+	LoginRoute: Route$10.update({
+		id: "/login",
+		path: "/login",
+		getParentRoute: () => Route$16
+	}),
+	PayrollRoute: Route$9.update({
+		id: "/payroll",
+		path: "/payroll",
+		getParentRoute: () => Route$16
+	}),
+	PerformanceRoute: Route$8.update({
+		id: "/performance",
+		path: "/performance",
+		getParentRoute: () => Route$16
+	}),
+	PropertiesRoute: Route$7.update({
+		id: "/properties",
+		path: "/properties",
+		getParentRoute: () => Route$16
+	}),
+	ReceiptsRoute: Route$6.update({
+		id: "/receipts",
+		path: "/receipts",
+		getParentRoute: () => Route$16
+	}),
+	SettingsRoute: Route$5.update({
+		id: "/settings",
+		path: "/settings",
+		getParentRoute: () => Route$16
+	}),
+	StaffRoute: Route$4.update({
+		id: "/staff",
+		path: "/staff",
+		getParentRoute: () => Route$16
+	}),
+	TasksRoute: Route$3.update({
+		id: "/tasks",
+		path: "/tasks",
+		getParentRoute: () => Route$16
+	}),
+	DealsIdRoute: Route$2.update({
+		id: "/deals_/$id",
+		path: "/deals/$id",
+		getParentRoute: () => Route$16
+	}),
+	ReceiptsIdRoute: Route$1.update({
+		id: "/receipts_/$id",
+		path: "/receipts/$id",
+		getParentRoute: () => Route$16
+	}),
+	ApiAuthSplatRoute: Route.update({
+		id: "/api/auth/$",
+		path: "/api/auth/$",
+		getParentRoute: () => Route$16
+	})
 };
 var routeTree = Route$16._addFileChildren(rootRouteChildren)._addFileTypes();
 var router_exports = /* @__PURE__ */ __exportAll({ getRouter: () => getRouter });
