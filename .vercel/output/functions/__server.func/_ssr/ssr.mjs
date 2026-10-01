@@ -118,7 +118,7 @@ var HEADERS = { TSS_SHELL: "X-TSS_SHELL" };
 * the dev styles URL for route-scoped CSS collection.
 */
 async function getStartManifest(matchedRoutes) {
-	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-C3Ipy2SB.mjs");
+	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-5vTTqlwH.mjs");
 	const startManifest = tsrStartManifest();
 	let routes = startManifest.routes;
 	routes[rootRouteId];
@@ -140,115 +140,115 @@ async function getStartManifest(matchedRoutes) {
 var manifest = {
 	"05ab7cbfc47bd5fbf8fe3beeafdffdeb8c9a5da55ec6c0ae60e150d8f643ce75": {
 		functionName: "upsertClient_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"077ce5117434f40a76369690e4f0903078bf83d15c784801ee32deffb82a70d0": {
 		functionName: "reviewLeave_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"0a0c878cfed22eb620cafc695fe65d67699f879d18bc5a69e0d05b9cc1d8fe40": {
 		functionName: "upsertDeal_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"0bde0df726b74971aa81916f53deb79a915b1b63f391aa282a18aac03a2bd85a": {
 		functionName: "listDeals_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"0c7dd88c03051607a5a681452d1d7990d5b8fd2d78ab70c86a99d2f45c38ce59": {
 		functionName: "requestLeave_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"0d203d19e74912dc40cc9c6182e6bd6906f6e6236dc4c6ec75ce809186c5b794": {
 		functionName: "clockToday_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"181472c3e29145e1c187199f74d151cb7b9fa360e0be5338885002ebd1415f58": {
 		functionName: "setAttendance_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"2c4985e96c199268f7f639534cb5e8e31d6b19d43286bf77416413db60ffde26": {
 		functionName: "fetchSessionUser_createServerFn_handler",
-		importer: () => import("../__root-BRNqHgeD.mjs")
+		importer: () => import("../__root-CBQKpAh-.mjs")
 	},
 	"307ebd22eadb9040a7f79e567076ff01578ac2fea2a0d1fb2db7adeaf1afe30a": {
 		functionName: "updateWorkspace_createServerFn_handler",
-		importer: () => import("./access-BWOeJYbp.mjs")
+		importer: () => import("./access-CYYoOk9J.mjs")
 	},
 	"3cd65b1299964a539175fc797d57cf4b1a1ae4454a82ce2be0170735e01eacec": {
 		functionName: "upsertStaff_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"63f578b0001a0076ae4ad6802503147e33eb149b3792a3c64021fd5217c0bf9b": {
 		functionName: "listStaff_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"6cfdf2c29e1518d88d993eb7acb638dec5382a1f5974ce0913e578ae83b8177d": {
 		functionName: "listLeave_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"7e7488ad3a89e002aadc4376594be764dfd3000b1d9a73089689b43408b4608b": {
 		functionName: "listReviews_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"805a7ec6e9cbb8246a98c23854c430b8bff59b3058ebe2b6d45b09ab6054ebb7": {
 		functionName: "listPayroll_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"99136bff47d0ec90e470b6766cccfebded93cf5c443e0e08de08f81b74d22347": {
 		functionName: "processPayroll_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"9db85427a1c24a4946624e0d3df9e6cbf4f6db0a0617124b39eec33b6ee26c12": {
 		functionName: "getDashboard_createServerFn_handler",
-		importer: () => import("./dashboard-Cgd7plzS.mjs")
+		importer: () => import("./dashboard-Jnrm0p1M.mjs")
 	},
 	"ab0f6919d1abc1a6f722233cd57a641cc24c202e51a4b60e04036381156313cb": {
 		functionName: "getBootstrap_createServerFn_handler",
-		importer: () => import("./access-BWOeJYbp.mjs")
+		importer: () => import("./access-CYYoOk9J.mjs")
 	},
 	"b116b3a6538dda78c590771d4d7c3baad2ff09e555e26cc9a566f49463311ed2": {
 		functionName: "upsertReview_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"c1db5569404235c31597f22f3305a9d5227aef7a96072cb9cbc23397ff1af32e": {
 		functionName: "listClients_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"c27d4c67d9b551e7e3d17f895bf95e93275622be48906b0306d07881fa94e5a6": {
 		functionName: "getPayment_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"c3cb4cf8fb5d688d0766adebc89152d72e18b78ae115d9d2629ce4c187253ca6": {
 		functionName: "listAttendance_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"d43827848ef3f91cac3c8d697ec73856ec25fcda2175ef55bfbf9e59293e145c": {
 		functionName: "listPayments_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"d6fabe816eb76beb35beaeb5ab9838e9a8da2b6e30092bc8c32f1514d20098b4": {
 		functionName: "upsertProperty_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"e2babbf7e7c833fff08a5df87db098ff2fc81e42c4fc82c41859bc2ca7444cab": {
 		functionName: "getDeal_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"e5e17cb4b7700162469edb9e725b220cb72dea7869806246b50e5c159c84c1e4": {
 		functionName: "listTasks_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	},
 	"e7ff071f407541e41e51ee0361709f911fee9a19b9248a7798abf129ac7b4181": {
 		functionName: "createPayment_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"f33bbc0e040b4db94f74c4a6ed712eedc1d5b4cd350b1cf7eacdf664f59a5aa5": {
 		functionName: "listProperties_createServerFn_handler",
-		importer: () => import("./crm-CA78mAT6.mjs")
+		importer: () => import("./crm-Bti8tquh.mjs")
 	},
 	"fe154cb5e78d6438eeaf2df2306295ccb0373d3d6fcf54cdc9c2d2d32c41965d": {
 		functionName: "upsertTask_createServerFn_handler",
-		importer: () => import("./people-CS_1XcLV.mjs")
+		importer: () => import("./people-BsBfhy0O.mjs")
 	}
 };
 async function getServerFnById(id, access) {
@@ -1518,7 +1518,7 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
 	const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-		import("./router--Tq7Vjsr.mjs").then((n) => n.t),
+		import("./router-k59e0z5G.mjs").then((n) => n.t),
 		import("./start-5Z2QO8AU.mjs"),
 		import("./empty-plugin-adapters-D9UWiqvJ.mjs")
 	]);

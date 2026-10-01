@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DEAL_KINDS, DEAL_STATUSES, PAYMENT_PLANS } from "@/lib/constants";
+import { DEAL_KINDS, DEAL_STATUSES, isAdmin as checkIsAdmin, PAYMENT_PLANS } from "@/lib/constants";
 import { formatDate, formatNgn, todayWAT } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { listClients, listDeals, listProperties, upsertDeal } from "@/lib/server/crm";
@@ -31,7 +31,7 @@ function DealsPage() {
   const properties = useQuery({ queryKey: ["properties"], queryFn: () => listProperties() });
   const staff = useQuery({ queryKey: ["staff"], queryFn: () => listStaff() });
   const [open, setOpen] = useState(false);
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
 
   const save = useMutation({
     mutationFn: (data: Parameters<typeof upsertDeal>[0]["data"]) => upsertDeal({ data }),

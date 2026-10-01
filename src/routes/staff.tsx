@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/empty-state";
 import { PageHeader } from "@/components/page-header";
 import { PersonChip } from "@/components/person-chip";
 import { StatusBadge } from "@/components/status-badge";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -14,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BANKS, DEPARTMENTS, STAFF_STATUSES } from "@/lib/constants";
+import { BANKS, DEPARTMENTS, isAdmin as checkIsAdmin, ROLES, type Role, roleLabel, STAFF_STATUSES } from "@/lib/constants";
 import { formatDate, formatNgn } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { listStaff, upsertStaff } from "@/lib/server/people";
@@ -28,7 +29,7 @@ function StaffPage() {
   const staff = useQuery({ queryKey: ["staff"], queryFn: () => listStaff() });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Staff | null>(null);
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
 
   const save = useMutation({
     mutationFn: (data: Parameters<typeof upsertStaff>[0]["data"]) => upsertStaff({ data }),
@@ -74,7 +75,16 @@ function StaffPage() {
           {(staff.data ?? []).map((s) => (
             <Card key={s.id}>
               <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-                <PersonChip id={s.id} name={s.fullName} meta={`${s.role} · ${s.department} · ${s.email}`} />
+                <PersonChip
+                  id={s.id}
+                  name={s.fullName}
+                  badge={
+                    <Badge variant="outline" className="text-xs font-normal shrink-0">
+                      {roleLabel(s.role)}
+                    </Badge>
+                  }
+                  meta={`${s.department} · ${s.email}`}
+                />
                 <div className="flex flex-wrap items-center gap-3 text-sm">
                   <StatusBadge value={s.status} />
                   {isAdmin ? (
@@ -124,12 +134,14 @@ function StaffDialog({
   busy: boolean;
   onSave: (data: Parameters<typeof upsertStaff>[0]["data"]) => void;
 }) {
+  const [role, setRole] = useState<Role>("staff");
   const [department, setDepartment] = useState("Sales");
   const [status, setStatus] = useState("active");
   const [bankName, setBankName] = useState("GTBank");
 
   useEffect(() => {
     if (!open) return;
+    setRole((editing?.role && ROLES.includes(editing.role as Role)) ? (editing.role as Role) : "staff");
     setDepartment(editing?.department ?? "Sales");
     setStatus(editing?.status ?? "active");
     setBankName(editing?.bankName ?? "GTBank");
@@ -149,7 +161,7 @@ function StaffDialog({
               fullName: String(fd.get("fullName")),
               email: String(fd.get("email")),
               phone: String(fd.get("phone")),
-              role: String(fd.get("role")),
+              role,
               department,
               salaryNgn: Number(fd.get("salaryNgn")),
               hireDate: String(fd.get("hireDate")),
@@ -170,7 +182,21 @@ function StaffDialog({
             <Field label="Full name" name="fullName" defaultValue={editing?.fullName} required />
             <Field label="Work email" name="email" type="email" defaultValue={editing?.email} required />
             <Field label="Phone" name="phone" defaultValue={editing?.phone} required />
-            <Field label="Role" name="role" defaultValue={editing?.role ?? "Agent"} required />
+            <div className="space-y-1.5">
+              <Label>Role</Label>
+              <Select value={role} onValueChange={(v) => setRole(v as Role)}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {ROLES.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {roleLabel(r)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-1.5">
               <Label>Department</Label>
               <Select value={department} onValueChange={setDepartment}>

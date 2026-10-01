@@ -25,21 +25,82 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
+import { isAdmin, type Role } from "@/lib/constants";
 import type { Workspace } from "@/lib/types";
 
 const NAV = [
-  { href: "/", label: "Overview", icon: LayoutDashboard, adminOnly: false },
-  { href: "/desk", label: "My desk", icon: Home, adminOnly: false },
-  { href: "/staff", label: "People", icon: Users, adminOnly: true },
-  { href: "/attendance", label: "Attendance", icon: CalendarCheck, adminOnly: false },
-  { href: "/payroll", label: "Payroll", icon: Wallet, adminOnly: false },
-  { href: "/performance", label: "Performance", icon: LineChart, adminOnly: false },
-  { href: "/tasks", label: "Tasks", icon: ClipboardList, adminOnly: false },
-  { href: "/clients", label: "Clients", icon: Briefcase, adminOnly: false },
-  { href: "/properties", label: "Listings", icon: Building2, adminOnly: false },
-  { href: "/deals", label: "Purchase forms", icon: ScrollText, adminOnly: false },
-  { href: "/receipts", label: "Receipts", icon: Receipt, adminOnly: false },
-  { href: "/settings", label: "Company", icon: Landmark, adminOnly: true },
+  {
+    href: "/",
+    label: "Overview",
+    icon: LayoutDashboard,
+    roles: ["super_admin", "executive", "hr_admin", "finance", "team_lead", "secretary", "staff"],
+  },
+  {
+    href: "/desk",
+    label: "My Desk",
+    icon: Home,
+    roles: ["super_admin", "executive", "hr_admin", "finance", "team_lead", "secretary", "staff"],
+  },
+  {
+    href: "/staff",
+    label: "People",
+    icon: Users,
+    roles: ["super_admin", "hr_admin", "executive"],
+  },
+  {
+    href: "/attendance",
+    label: "Attendance",
+    icon: CalendarCheck,
+    roles: ["super_admin", "executive", "hr_admin", "team_lead", "secretary", "staff"],
+  },
+  {
+    href: "/payroll",
+    label: "Payroll",
+    icon: Wallet,
+    roles: ["super_admin", "executive", "hr_admin", "staff"],
+  },
+  {
+    href: "/performance",
+    label: "Performance",
+    icon: LineChart,
+    roles: ["super_admin", "executive", "hr_admin", "team_lead"],
+  },
+  {
+    href: "/tasks",
+    label: "Tasks",
+    icon: ClipboardList,
+    roles: ["super_admin", "executive", "hr_admin", "finance", "team_lead", "secretary", "staff"],
+  },
+  {
+    href: "/clients",
+    label: "Clients",
+    icon: Briefcase,
+    roles: ["super_admin", "executive", "hr_admin", "team_lead", "staff"],
+  },
+  {
+    href: "/properties",
+    label: "Listings",
+    icon: Building2,
+    roles: ["super_admin", "executive", "hr_admin", "team_lead", "staff"],
+  },
+  {
+    href: "/deals",
+    label: "Purchase Forms",
+    icon: ScrollText,
+    roles: ["super_admin", "executive", "hr_admin", "finance", "team_lead", "staff"],
+  },
+  {
+    href: "/receipts",
+    label: "Receipts",
+    icon: Receipt,
+    roles: ["super_admin", "executive", "hr_admin", "finance"],
+  },
+  {
+    href: "/settings",
+    label: "Company",
+    icon: Landmark,
+    roles: ["super_admin", "hr_admin"],
+  },
 ] as const;
 
 function NavLinks({
@@ -47,11 +108,11 @@ function NavLinks({
   onNavigate,
   pathname,
 }: {
-  role: "admin" | "staff";
+  role: Role;
   onNavigate?: () => void;
   pathname: string;
 }) {
-  const items = NAV.filter((item) => !item.adminOnly || role === "admin");
+  const items = NAV.filter((item) => (item.roles as readonly Role[]).includes(role));
   return (
     <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3">
       {items.map((item) => {
@@ -84,7 +145,7 @@ function SidebarBody({
   onNavigate,
   pathname,
 }: {
-  role: "admin" | "staff";
+  role: Role;
   workspace: Workspace;
   onNavigate?: () => void;
   pathname: string;
@@ -105,7 +166,7 @@ function SidebarBody({
 
 const FALLBACK_WORKSPACE: Workspace = {
   userId: "",
-  companyName: "Aso Terrace",
+  companyName: "Eden Shelters",
   tagline: "Estate operations, Abuja",
   address: "Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT",
   phone: "+234 9 461 2200",
@@ -133,7 +194,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           </div>
         </aside>
         <main className="flex-1 p-6">
-          <p className="mb-1 text-xs font-medium tracking-widest text-muted-foreground uppercase">Aso Terrace</p>
+          <p className="mb-1 text-xs font-medium tracking-widest text-muted-foreground uppercase">Eden Shelters</p>
           <h1 className="mb-4 font-display text-2xl font-medium tracking-tight">The operations desk</h1>
           <Skeleton className="h-40 w-full rounded-xl" />
         </main>
@@ -142,7 +203,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   }
   if (!user) return <RedirectToSignIn />;
 
-  const role = bootstrap.data?.access.role ?? "admin";
+  const role: Role = bootstrap.data?.access.role ?? "staff";
   const workspace = bootstrap.data?.access.workspace ?? FALLBACK_WORKSPACE;
 
   return (
@@ -174,7 +235,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </p>
           </div>
           <Badge variant="outline" className="hidden sm:inline-flex">
-            {role === "admin" ? "Operations desk" : "Team desk"}
+            {isAdmin(role) ? "Operations desk" : "Team desk"}
           </Badge>
           <UserButton />
         </header>

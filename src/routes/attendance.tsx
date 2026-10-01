@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isAdmin as checkIsAdmin, roleLabel } from "@/lib/constants";
 import { formatDate, formatTimeWAT, todayWAT } from "@/lib/format";
 import { clockToday, listAttendance, listLeave, listStaff, reviewLeave } from "@/lib/server/people";
 import { getBootstrap } from "@/lib/server/access";
@@ -32,7 +33,7 @@ function AttendancePage() {
     queryFn: () => listAttendance({ data: { from, to: today } }),
   });
   const leave = useQuery({ queryKey: ["leave"], queryFn: () => listLeave() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
 
   const clock = useMutation({
     mutationFn: (input: { action: "in" | "out"; staffId?: number }) => clockToday({ data: input }),
@@ -83,7 +84,7 @@ function AttendancePage() {
               return (
                 <Card key={s.id}>
                   <CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
-                    <PersonChip id={s.id} name={s.fullName} meta={s.role} />
+                    <PersonChip id={s.id} name={s.fullName} meta={roleLabel(s.role)} />
                     <div className="flex flex-wrap items-center gap-2">
                       {row ? <StatusBadge value={row.status} /> : <StatusBadge value="absent" />}
                       <span className="text-xs tabular-nums text-muted-foreground">

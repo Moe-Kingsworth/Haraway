@@ -12,6 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getBootstrap } from "@/lib/server/access";
 import { getDashboard } from "@/lib/server/dashboard";
 import { clockToday } from "@/lib/server/people";
+import { roleLabel } from "@/lib/constants";
 import { formatNgn, formatNgnCompact, formatTimeWAT, isWeekend, monthLabel, todayWAT } from "@/lib/format";
 
 export const Route = createFileRoute("/")({ component: Home });
@@ -156,7 +157,7 @@ function Home() {
                 ) : (
                   d.inOffice.map((p) => (
                     <div key={p.id} className="flex items-center justify-between gap-3">
-                      <PersonChip id={p.id} name={p.name} meta={p.role} size="sm" />
+                      <PersonChip id={p.id} name={p.name} meta={roleLabel(p.role)} size="sm" />
                       <div className="flex items-center gap-2">
                         <span className="text-xs tabular-nums text-muted-foreground">{formatTimeWAT(p.clockIn)}</span>
                         <StatusBadge value={p.status} />

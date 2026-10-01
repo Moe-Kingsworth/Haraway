@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isAdmin as checkIsAdmin } from "@/lib/constants";
 import { getBootstrap, updateWorkspace } from "@/lib/server/access";
 
 export const Route = createFileRoute("/settings")({ component: SettingsPage });
@@ -15,7 +16,7 @@ export const Route = createFileRoute("/settings")({ component: SettingsPage });
 function SettingsPage() {
   const qc = useQueryClient();
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
   const ws = boot.data?.access.workspace;
 
   const save = useMutation({

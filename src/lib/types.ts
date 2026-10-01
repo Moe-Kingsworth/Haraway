@@ -1,4 +1,6 @@
-export type MemberRole = "admin" | "staff";
+import type { Role } from "./constants";
+
+export type MemberRole = Role;
 
 export type Workspace = {
   userId: string;
@@ -13,7 +15,9 @@ export type Workspace = {
 export type Access = {
   userId: string;
   ownerId: string;
-  role: MemberRole;
+  role: Role;
+  isAdmin: boolean;
+  isFounderAccount: boolean;
   staffId: number | null;
   displayName: string;
   email: string;
@@ -25,13 +29,15 @@ export type Staff = {
   fullName: string;
   email: string;
   phone: string;
-  role: string;
+  role: Role;
   department: string;
   employmentType: string;
   salaryNgn: number;
   hireDate: string;
   status: string;
   isOwner: boolean;
+  isFounderAccount: boolean;
+  is_founder_account: boolean;
   bankName: string | null;
   accountNumber: string | null;
   notes: string | null;

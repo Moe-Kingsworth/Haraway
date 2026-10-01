@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { isAdmin, ROLES, type Role } from "@/lib/constants";
 import { getSql, type Sql } from "@/lib/db";
 import { asNumber, todayWAT } from "@/lib/format";
 import type { Access, MemberRole, Staff, Workspace } from "@/lib/types";
@@ -53,22 +54,26 @@ export function mapStaff(row: {
   hire_date: unknown;
   status: string;
   is_owner: boolean;
+  is_founder_account?: boolean | null;
   bank_name: string | null;
   account_number: string | null;
   notes: string | null;
 }): Staff {
+  const isFounder = Boolean(row.is_founder_account);
   return {
     id: row.id,
     fullName: row.full_name,
     email: row.email,
     phone: row.phone,
-    role: row.role,
+    role: (row.role as Role) || "staff",
     department: row.department,
     employmentType: row.employment_type,
     salaryNgn: num(row.salary_ngn),
     hireDate: dateStr(row.hire_date),
     status: row.status,
     isOwner: Boolean(row.is_owner),
+    isFounderAccount: isFounder,
+    is_founder_account: isFounder,
     bankName: row.bank_name,
     accountNumber: row.account_number,
     notes: row.notes,
@@ -110,17 +115,46 @@ export async function resolveAccess(userId: string): Promise<Access> {
     const m = existing[0];
     const workspace = (await loadWorkspace(sql, m.company_owner_id)) ?? {
       userId: m.company_owner_id,
-      companyName: "Aso Terrace",
+      companyName: "Eden Shelters",
       tagline: "Estate operations, Abuja",
       address: "Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT",
       phone: "+234 9 461 2200",
       email: "ops@asoterrace.ng",
       rcNumber: "RC 1847291",
     };
+
+    let userRole: Role = "staff";
+    let isFounder = false;
+
+    if (m.staff_id) {
+      const s = await sql<{ role: string; is_founder_account: boolean; is_owner: boolean }>`
+        select role, is_founder_account, is_owner from staff where id = ${m.staff_id}
+      `;
+      if (s[0]) {
+        isFounder = Boolean(s[0].is_founder_account);
+        const r = s[0].role;
+        if (ROLES.includes(r as Role)) {
+          userRole = r as Role;
+        } else if (r === "admin" || s[0].is_owner) {
+          userRole = "super_admin";
+        } else {
+          userRole = "staff";
+        }
+      }
+    } else {
+      userRole = m.role === "admin" ? "super_admin" : (ROLES.includes(m.role as Role) ? (m.role as Role) : "staff");
+      if (userId === m.company_owner_id) {
+        userRole = "super_admin";
+        isFounder = true;
+      }
+    }
+
     return {
       userId,
       ownerId: m.company_owner_id,
-      role: m.role === "staff" ? "staff" : "admin",
+      role: userRole,
+      isAdmin: isAdmin(userRole),
+      isFounderAccount: isFounder,
       staffId: m.staff_id,
       displayName: profile.name ?? "Colleague",
       email: profile.email ?? "",
@@ -130,19 +164,22 @@ export async function resolveAccess(userId: string): Promise<Access> {
 
   const email = (profile.email ?? "").trim().toLowerCase();
   if (email) {
-    const match = await sql<{ id: number; user_id: string }>`
-      select id, user_id from staff where lower(email) = ${email} limit 1
+    const match = await sql<{ id: number; user_id: string; role: string; is_founder_account: boolean }>`
+      select id, user_id, role, is_founder_account from staff where lower(email) = ${email} limit 1
     `;
     if (match[0] && match[0].user_id !== userId) {
+      const staffRole = ROLES.includes(match[0].role as Role) ? (match[0].role as Role) : "staff";
       await sql`
         insert into memberships (user_id, company_owner_id, staff_id, role)
-        values (${userId}, ${match[0].user_id}, ${match[0].id}, ${"staff"})
+        values (${userId}, ${match[0].user_id}, ${match[0].id}, ${staffRole})
       `;
       const workspace = (await loadWorkspace(sql, match[0].user_id))!;
       return {
         userId,
         ownerId: match[0].user_id,
-        role: "staff",
+        role: staffRole,
+        isAdmin: isAdmin(staffRole),
+        isFounderAccount: Boolean(match[0].is_founder_account),
         staffId: match[0].id,
         displayName: profile.name ?? "Colleague",
         email: profile.email ?? "",
@@ -153,13 +190,18 @@ export async function resolveAccess(userId: string): Promise<Access> {
 
   await seedWorkspace(sql, userId, profile);
   const workspace = (await loadWorkspace(sql, userId))!;
-  const ownerStaff = await sql<{ id: number }>`
-    select id from staff where user_id = ${userId} and is_owner = true limit 1
+  const ownerStaff = await sql<{ id: number; role: string; is_founder_account: boolean }>`
+    select id, role, is_founder_account from staff where user_id = ${userId} and is_owner = true limit 1
   `;
+  const ownerRole = ownerStaff[0]?.role && ROLES.includes(ownerStaff[0].role as Role)
+    ? (ownerStaff[0].role as Role)
+    : "super_admin";
   return {
     userId,
     ownerId: userId,
-    role: "admin",
+    role: ownerRole,
+    isAdmin: isAdmin(ownerRole),
+    isFounderAccount: ownerStaff[0] ? Boolean(ownerStaff[0].is_founder_account) : true,
     staffId: ownerStaff[0]?.id ?? null,
     displayName: profile.name ?? "Managing Director",
     email: profile.email ?? "",
@@ -168,8 +210,14 @@ export async function resolveAccess(userId: string): Promise<Access> {
 }
 
 export function assertAdmin(access: Access): void {
-  if (access.role !== "admin") {
+  if (!isAdmin(access.role)) {
     throw new Error("Only the operations desk can do that.");
+  }
+}
+
+export function assertNotFounder(staff: Staff, action: string): void {
+  if (staff.is_founder_account || staff.isFounderAccount) {
+    throw new Error(`Cannot ${action} the founder account.`);
   }
 }
 
@@ -291,7 +339,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
     insert into workspaces (user_id, company_name, tagline, address, phone, email, rc_number)
     values (
       ${userId},
-      ${"Aso Terrace"},
+      ${"Eden Shelters"},
       ${"Estate operations, Abuja"},
       ${"Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT"},
       ${"+234 9 461 2200"},
@@ -308,11 +356,12 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
     name: string;
     email: string;
     phone: string;
-    role: string;
+    role: Role;
     dept: string;
     salary: number;
     hire: string;
     owner: boolean;
+    founder?: boolean;
     bank: string;
     acct: string;
   }> = [
@@ -320,11 +369,12 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: ownerName,
       email: ownerEmail,
       phone: "+234 803 441 2201",
-      role: "Managing Director",
-      dept: "Leadership",
+      role: "super_admin",
+      dept: "Executive",
       salary: 1_800_000,
       hire: "2019-03-01",
       owner: true,
+      founder: true,
       bank: "GTBank",
       acct: "0148823310",
     },
@@ -332,7 +382,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Chinedu Okonkwo",
       email: `chinedu.${tag}@asoterrace.ng`,
       phone: "+234 809 112 4482",
-      role: "Principal Agent",
+      role: "team_lead",
       dept: "Sales",
       salary: 850_000,
       hire: "2021-06-14",
@@ -344,7 +394,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Aisha Bello",
       email: `aisha.${tag}@asoterrace.ng`,
       phone: "+234 701 334 9088",
-      role: "Senior Agent",
+      role: "staff",
       dept: "Sales",
       salary: 720_000,
       hire: "2022-02-07",
@@ -356,7 +406,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Tunde Adeyemi",
       email: `tunde.${tag}@asoterrace.ng`,
       phone: "+234 802 665 1190",
-      role: "Legal Counsel",
+      role: "executive",
       dept: "Legal",
       salary: 950_000,
       hire: "2020-11-02",
@@ -368,7 +418,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Ngozi Eze",
       email: `ngozi.${tag}@asoterrace.ng`,
       phone: "+234 803 778 2204",
-      role: "Head of Finance",
+      role: "finance",
       dept: "Finance",
       salary: 900_000,
       hire: "2020-04-20",
@@ -380,7 +430,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Ibrahim Suleiman",
       email: `ibrahim.${tag}@asoterrace.ng`,
       phone: "+234 706 441 8832",
-      role: "Facilities Lead",
+      role: "team_lead",
       dept: "Operations",
       salary: 580_000,
       hire: "2023-01-16",
@@ -392,7 +442,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Folake Adewale",
       email: `folake.${tag}@asoterrace.ng`,
       phone: "+234 805 992 1107",
-      role: "Client Relations",
+      role: "secretary",
       dept: "Sales",
       salary: 640_000,
       hire: "2023-08-01",
@@ -404,8 +454,8 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       name: "Yusuf Dantata",
       email: `yusuf.${tag}@asoterrace.ng`,
       phone: "+234 809 221 6674",
-      role: "Land Surveyor",
-      dept: "Operations",
+      role: "hr_admin",
+      dept: "HR",
       salary: 700_000,
       hire: "2022-09-12",
       owner: false,
@@ -419,10 +469,10 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
     const inserted = await sql<{ id: number }>`
       insert into staff (
         user_id, full_name, email, phone, role, department, employment_type,
-        salary_ngn, hire_date, status, is_owner, bank_name, account_number
+        salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number
       ) values (
         ${userId}, ${p.name}, ${p.email}, ${p.phone}, ${p.role}, ${p.dept}, ${"Full-time"},
-        ${p.salary}, ${p.hire}::date, ${"active"}, ${p.owner}, ${p.bank}, ${p.acct}
+        ${p.salary}, ${p.hire}::date, ${"active"}, ${p.owner}, ${Boolean(p.founder)}, ${p.bank}, ${p.acct}
       ) returning id
     `;
     staffIds.push(inserted[0]!.id);
@@ -431,7 +481,7 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
   const ownerStaffId = staffIds[0]!;
   await sql`
     insert into memberships (user_id, company_owner_id, staff_id, role)
-    values (${userId}, ${userId}, ${ownerStaffId}, ${"admin"})
+    values (${userId}, ${userId}, ${ownerStaffId}, ${"super_admin"})
   `;
 
   const today = todayWAT();
@@ -653,12 +703,22 @@ export const getBootstrap = createServerFn({ method: "GET" })
     if (access.staffId) {
       const rows = await sql<Parameters<typeof mapStaff>[0]>`
         select id, full_name, email, phone, role, department, employment_type,
-               salary_ngn, hire_date, status, is_owner, bank_name, account_number, notes
+               salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
         from staff where id = ${access.staffId} and user_id = ${access.ownerId}
       `;
       me = rows[0] ? mapStaff(rows[0]) : null;
     }
-    return { access, me };
+    const isFounderAccount = access.isFounderAccount || Boolean(me?.isFounderAccount);
+    return {
+      access: {
+        ...access,
+        isAdmin: access.isAdmin,
+        isFounderAccount,
+      },
+      me,
+      isAdmin: access.isAdmin,
+      isFounderAccount,
+    };
   });
 
 export type { MemberRole };

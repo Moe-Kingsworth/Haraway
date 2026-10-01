@@ -1,8 +1,8 @@
--- Aso Terrace — company workspace, people, and estate operations.
+-- Eden Shelters — company workspace, people, and estate operations.
 
 create table if not exists workspaces (
   user_id text primary key,
-  company_name text not null default 'Aso Terrace',
+  company_name text not null default 'Eden Shelters',
   tagline text not null default 'Estate operations, Abuja',
   address text not null default 'Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT',
   phone text not null default '+234 9 461 2200',
@@ -18,18 +18,20 @@ create table if not exists staff (
   full_name text not null,
   email text not null,
   phone text not null,
-  role text not null,
+  role text not null check (role in ('super_admin', 'executive', 'hr_admin', 'finance', 'team_lead', 'secretary', 'staff')),
   department text not null,
   employment_type text not null default 'Full-time',
   salary_ngn integer not null,
   hire_date date not null,
   status text not null default 'active',
   is_owner boolean not null default false,
+  is_founder_account boolean not null default false,
   bank_name text,
   account_number text,
   notes text,
   created_at timestamptz not null default now()
 );
+alter table staff add column if not exists is_founder_account boolean not null default false;
 create index if not exists staff_user_id_idx on staff (user_id);
 
 create table if not exists memberships (

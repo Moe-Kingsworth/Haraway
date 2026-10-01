@@ -7,11 +7,13 @@ export function PersonChip({
   name,
   meta,
   size = "md",
+  badge,
 }: {
   id: number;
   name: string;
   meta?: string;
   size?: "sm" | "md";
+  badge?: React.ReactNode;
 }) {
   return (
     <div className="flex min-w-0 items-center gap-2.5">
@@ -25,7 +27,10 @@ export function PersonChip({
         {initials(name)}
       </span>
       <span className="min-w-0">
-        <span className="block truncate text-sm font-medium">{name}</span>
+        <span className="flex items-center gap-2">
+          <span className="truncate text-sm font-medium">{name}</span>
+          {badge}
+        </span>
         {meta ? <span className="block truncate text-xs text-muted-foreground">{meta}</span> : null}
       </span>
     </div>

@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CLIENT_STAGE_LABELS, CLIENT_STAGES, CLIENT_TYPES } from "@/lib/constants";
+import { CLIENT_STAGE_LABELS, CLIENT_STAGES, CLIENT_TYPES, isAdmin as checkIsAdmin } from "@/lib/constants";
 import { getBootstrap } from "@/lib/server/access";
 import { listClients, upsertClient } from "@/lib/server/crm";
 import { listStaff } from "@/lib/server/people";
@@ -29,7 +29,7 @@ function ClientsPage() {
   const staff = useQuery({ queryKey: ["staff"], queryFn: () => listStaff() });
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Client | null>(null);
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
 
   const save = useMutation({
     mutationFn: (data: Parameters<typeof upsertClient>[0]["data"]) => upsertClient({ data }),

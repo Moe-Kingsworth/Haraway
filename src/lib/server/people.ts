@@ -1,9 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { isAdmin, type Role } from "@/lib/constants";
 import { getSql } from "@/lib/db";
 import { isWeekend, todayWAT } from "@/lib/format";
 import type { AttendanceRow, LeaveRow, Payslip, PayrollRun, Review, Staff, TaskRow } from "@/lib/types";
-import { assertAdmin, dateStr, mapStaff, num, resolveAccess, tsStr } from "./access";
+import { assertAdmin, assertNotFounder, dateStr, mapStaff, num, resolveAccess, tsStr } from "./access";
 
 export const listStaff = createServerFn({ method: "GET" })
   .middleware([authMiddleware])
@@ -12,11 +13,11 @@ export const listStaff = createServerFn({ method: "GET" })
     const sql = await getSql();
     const rows = await sql<Parameters<typeof mapStaff>[0]>`
       select id, full_name, email, phone, role, department, employment_type,
-             salary_ngn, hire_date, status, is_owner, bank_name, account_number, notes
+             salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
       from staff where user_id = ${access.ownerId} order by is_owner desc, full_name
     `;
     const mapped = rows.map(mapStaff);
-    if (access.role === "staff") {
+    if (!isAdmin(access.role)) {
       return mapped.map((s) =>
         s.id === access.staffId ? s : { ...s, salaryNgn: 0, bankName: null, accountNumber: null },
       );
@@ -31,7 +32,7 @@ export const upsertStaff = createServerFn({ method: "POST" })
     fullName: string;
     email: string;
     phone: string;
-    role: string;
+    role: Role;
     department: string;
     salaryNgn: number;
     hireDate: string;
@@ -47,6 +48,22 @@ export const upsertStaff = createServerFn({ method: "POST" })
     const email = data.email.trim().toLowerCase();
     if (!name || !email) throw new Error("Name and email are required.");
     if (data.id) {
+      const targetRows = await sql<Parameters<typeof mapStaff>[0]>`
+        select id, full_name, email, phone, role, department, employment_type,
+               salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
+        from staff where id = ${data.id} and user_id = ${access.ownerId}
+      `;
+      if (!targetRows[0]) throw new Error("Staff not found.");
+      const targetStaff = mapStaff(targetRows[0]);
+      if (targetStaff.isFounderAccount) {
+        if (targetStaff.role !== data.role) {
+          assertNotFounder(targetStaff, "change the role of");
+        }
+        if (targetStaff.status !== data.status && data.status !== "active") {
+          assertNotFounder(targetStaff, "suspend");
+        }
+      }
+
       await sql`
         update staff set
           full_name = ${name}, email = ${email}, phone = ${data.phone.trim()},
@@ -117,7 +134,7 @@ export const clockToday = createServerFn({ method: "POST" })
     const access = await resolveAccess(context.userId);
     const staffId = data.staffId ?? access.staffId;
     if (!staffId) throw new Error("No staff desk is linked to this account.");
-    if (access.role !== "admin" && staffId !== access.staffId) {
+    if (!isAdmin(access.role) && staffId !== access.staffId) {
       throw new Error("You can only clock for your own desk.");
     }
     const sql = await getSql();
@@ -199,7 +216,7 @@ export const listLeave = createServerFn({ method: "GET" })
       from leave_requests l
       join staff s on s.id = l.staff_id
       where l.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or l.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or l.staff_id = ${access.staffId ?? 0})
       order by l.created_at desc
     `;
     return rows.map(
@@ -279,7 +296,7 @@ export const listPayroll = createServerFn({ method: "GET" })
       join staff s on s.id = p.staff_id
       join payroll_runs r on r.id = p.run_id
       where p.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or p.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or p.staff_id = ${access.staffId ?? 0})
       order by r.period_year desc, r.period_month desc, s.full_name
     `;
     return {
@@ -378,7 +395,7 @@ export const listTasks = createServerFn({ method: "GET" })
       from tasks t
       left join staff s on s.id = t.staff_id
       where t.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or t.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or t.staff_id = ${access.staffId ?? 0})
       order by case t.status when 'blocked' then 0 when 'doing' then 1 when 'todo' then 2 else 3 end,
                t.due_date nulls last
     `;
@@ -416,7 +433,7 @@ export const upsertTask = createServerFn({ method: "POST" })
     const title = data.title.trim();
     if (!title) throw new Error("A task needs a title.");
     if (data.id) {
-      if (access.role !== "admin") {
+      if (!isAdmin(access.role)) {
         await sql`
           update tasks set status = ${data.status}
           where id = ${data.id} and user_id = ${access.ownerId} and staff_id = ${access.staffId ?? 0}
@@ -466,7 +483,7 @@ export const listReviews = createServerFn({ method: "GET" })
       from performance_reviews r
       join staff s on s.id = r.staff_id
       where r.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or r.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or r.staff_id = ${access.staffId ?? 0})
       order by s.full_name
     `;
     return rows.map(

@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { isAdmin } from "@/lib/constants";
 import { getSql } from "@/lib/db";
 import { todayWAT } from "@/lib/format";
 import type { DashboardData, Payment } from "@/lib/types";
@@ -25,13 +26,13 @@ export const getDashboard = createServerFn({ method: "GET" })
     const openTasks = await sql<{ n: number }>`
       select count(*)::int as n from tasks
       where user_id = ${ownerId} and status in (${"todo"}, ${"doing"}, ${"blocked"})
-        and (${access.role === "admin"} or staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or staff_id = ${access.staffId ?? 0})
     `;
     const overdue = await sql<{ n: number }>`
       select count(*)::int as n from tasks
       where user_id = ${ownerId} and status in (${"todo"}, ${"doing"}, ${"blocked"})
         and due_date < ${today}::date
-        and (${access.role === "admin"} or staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or staff_id = ${access.staffId ?? 0})
     `;
     const pipeline = await sql<{ n: unknown }>`
       select coalesce(sum(offer_ngn), 0) as n from deals

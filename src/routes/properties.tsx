@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DISTRICTS, PROPERTY_STATUSES, PROPERTY_TYPES } from "@/lib/constants";
+import { DISTRICTS, isAdmin as checkIsAdmin, PROPERTY_STATUSES, PROPERTY_TYPES } from "@/lib/constants";
 import { formatNgn } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { listProperties, upsertProperty } from "@/lib/server/crm";
@@ -26,7 +26,7 @@ function PropertiesPage() {
   const qc = useQueryClient();
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
   const properties = useQuery({ queryKey: ["properties"], queryFn: () => listProperties() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Property | null>(null);
 

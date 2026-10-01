@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
+import { isAdmin } from "@/lib/constants";
 import { getSql } from "@/lib/db";
 import type { Client, Deal, Payment, Property } from "@/lib/types";
 import { assertAdmin, dateStr, num, resolveAccess, tsStr } from "./access";
@@ -27,7 +28,7 @@ export const listClients = createServerFn({ method: "GET" })
       from clients c
       left join staff s on s.id = c.assigned_staff_id
       where c.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or c.assigned_staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or c.assigned_staff_id = ${access.staffId ?? 0})
       order by c.created_at desc
     `;
     return rows.map(
@@ -66,7 +67,7 @@ export const upsertClient = createServerFn({ method: "POST" })
     const name = data.fullName.trim();
     if (!name || !data.phone.trim()) throw new Error("Name and phone are required.");
     const assigned =
-      access.role === "admin" ? (data.assignedStaffId ?? access.staffId) : access.staffId;
+      isAdmin(access.role) ? (data.assignedStaffId ?? access.staffId) : access.staffId;
     if (data.id) {
       await sql`
         update clients set
@@ -74,7 +75,7 @@ export const upsertClient = createServerFn({ method: "POST" })
           type = ${data.type}, stage = ${data.stage}, source = ${data.source ?? null},
           assigned_staff_id = ${assigned ?? null}, notes = ${data.notes ?? null}
         where id = ${data.id} and user_id = ${access.ownerId}
-          and (${access.role === "admin"} or assigned_staff_id = ${access.staffId ?? 0})
+          and (${isAdmin(access.role)} or assigned_staff_id = ${access.staffId ?? 0})
       `;
       return { id: data.id };
     }
@@ -204,7 +205,7 @@ export const listDeals = createServerFn({ method: "GET" })
       join properties p on p.id = d.property_id
       left join staff s on s.id = d.staff_id
       where d.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or d.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or d.staff_id = ${access.staffId ?? 0})
       order by d.created_at desc
     `;
     return rows.map(
@@ -246,7 +247,7 @@ export const upsertDeal = createServerFn({ method: "POST" })
   .handler(async ({ context, data }) => {
     const access = await resolveAccess(context.userId);
     const sql = await getSql();
-    const staffId = access.role === "admin" ? (data.staffId ?? access.staffId) : access.staffId;
+    const staffId = isAdmin(access.role) ? (data.staffId ?? access.staffId) : access.staffId;
     if (data.id) {
       await sql`
         update deals set
@@ -255,7 +256,7 @@ export const upsertDeal = createServerFn({ method: "POST" })
           payment_plan = ${data.paymentPlan ?? null}, issued_at = ${data.issuedAt ?? null},
           notes = ${data.notes ?? null}
         where id = ${data.id} and user_id = ${access.ownerId}
-          and (${access.role === "admin"} or staff_id = ${access.staffId ?? 0})
+          and (${isAdmin(access.role)} or staff_id = ${access.staffId ?? 0})
       `;
       return { id: data.id };
     }
@@ -314,7 +315,7 @@ export const getDeal = createServerFn({ method: "GET" })
       join properties p on p.id = d.property_id
       left join staff s on s.id = d.staff_id
       where d.id = ${data.id} and d.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or d.staff_id = ${access.staffId ?? 0})
+        and (${isAdmin(access.role)} or d.staff_id = ${access.staffId ?? 0})
     `;
     const d = rows[0];
     if (!d) throw new Error("Purchase form not found.");
@@ -365,7 +366,7 @@ export const listPayments = createServerFn({ method: "GET" })
       join clients c on c.id = p.client_id
       left join deals d on d.id = p.deal_id
       where p.user_id = ${access.ownerId}
-        and (${access.role === "admin"} or exists (
+        and (${isAdmin(access.role)} or exists (
           select 1 from clients cx where cx.id = p.client_id and cx.assigned_staff_id = ${access.staffId ?? 0}
         ))
       order by p.paid_at desc, p.id desc
@@ -398,7 +399,7 @@ export const createPayment = createServerFn({ method: "POST" })
   }) => input)
   .handler(async ({ context, data }) => {
     const access = await resolveAccess(context.userId);
-    if (access.role !== "admin") {
+    if (!isAdmin(access.role)) {
       throw new Error("Only the operations desk can issue receipts.");
     }
     const sql = await getSql();

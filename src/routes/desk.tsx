@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { LEAVE_TYPES } from "@/lib/constants";
+import { LEAVE_TYPES, roleLabel } from "@/lib/constants";
 import { useState } from "react";
 
 export const Route = createFileRoute("/desk")({ component: DeskPage });
@@ -69,7 +69,7 @@ function DeskPage() {
       <PageHeader
         kicker="My desk"
         title={me ? me.fullName : "Your desk"}
-        description={me ? `${me.role} · ${me.department}` : "Clock in, see your work, and read your last payslip."}
+        description={me ? `${roleLabel(me.role)} · ${me.department}` : "Clock in, see your work, and read your last payslip."}
         actions={
           <div className="flex gap-2">
             <Button

@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PAYMENT_METHODS } from "@/lib/constants";
+import { isAdmin as checkIsAdmin, PAYMENT_METHODS } from "@/lib/constants";
 import { formatDate, formatNgn, todayWAT } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { createPayment, listClients, listDeals, listPayments } from "@/lib/server/crm";
@@ -27,7 +27,7 @@ function ReceiptsPage() {
   const payments = useQuery({ queryKey: ["payments"], queryFn: () => listPayments() });
   const clients = useQuery({ queryKey: ["clients"], queryFn: () => listClients() });
   const deals = useQuery({ queryKey: ["deals"], queryFn: () => listDeals() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
   const [open, setOpen] = useState(false);
 
   const save = useMutation({

@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isAdmin as checkIsAdmin } from "@/lib/constants";
 import { getBootstrap } from "@/lib/server/access";
 import { listReviews, listStaff, upsertReview } from "@/lib/server/people";
 
@@ -36,7 +37,7 @@ function PerformancePage() {
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
   const reviews = useQuery({ queryKey: ["reviews"], queryFn: () => listReviews() });
   const staff = useQuery({ queryKey: ["staff"], queryFn: () => listStaff() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
   const [open, setOpen] = useState(false);
   const [staffId, setStaffId] = useState("");
 

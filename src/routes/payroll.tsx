@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isAdmin as checkIsAdmin } from "@/lib/constants";
 import { formatNgn, monthLabel, todayWAT } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { listPayroll, processPayroll } from "@/lib/server/people";
@@ -22,8 +23,8 @@ function PayrollPage() {
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
   const pay = useQuery({ queryKey: ["payroll"], queryFn: () => listPayroll() });
   const [slip, setSlip] = useState<Payslip | null>(null);
-  const isAdmin = boot.data?.access.role === "admin";
-  const company = boot.data?.access.workspace.companyName ?? "Aso Terrace";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
+  const company = boot.data?.access.workspace.companyName ?? "Eden Shelters";
   const today = todayWAT();
   const [year, month] = today.split("-").map(Number);
   const already = pay.data?.runs.some((r) => r.periodYear === year && r.periodMonth === month && r.status !== "draft");

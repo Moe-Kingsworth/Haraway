@@ -36,7 +36,53 @@ export const CLIENT_STAGE_LABELS: Record<(typeof CLIENT_STAGES)[number], string>
   closed: "Closed",
   lost: "Lost",
 };
-export const DEPARTMENTS = ["Leadership", "Sales", "Legal", "Finance", "Operations"] as const;
+export const DEPARTMENTS = [
+  "Executive",
+  "Sales",
+  "Legal",
+  "Finance",
+  "Operations",
+  "HR",
+] as const;
+
+export const ROLES = [
+  "super_admin",
+  "executive",
+  "hr_admin",
+  "finance",
+  "team_lead",
+  "secretary",
+  "staff",
+] as const;
+
+export type Role = (typeof ROLES)[number];
+
+// Roles that count as "admin" for backward compatibility
+export const ADMIN_ROLES: Role[] = [
+  "super_admin",
+  "executive",
+  "hr_admin",
+  "finance",
+  "team_lead",
+  "secretary",
+];
+
+export function isAdmin(role: Role | string): boolean {
+  return ADMIN_ROLES.includes(role as Role) || role === "admin";
+}
+
+export function roleLabel(role: Role | string): string {
+  const labels: Record<Role, string> = {
+    super_admin: "Super Admin",
+    executive: "Executive",
+    hr_admin: "HR/Admin",
+    finance: "Finance",
+    team_lead: "Team Lead",
+    secretary: "Secretary",
+    staff: "Staff",
+  };
+  return (labels as Record<string, string>)[role] ?? role;
+}
 export const STAFF_STATUSES = ["active", "on_leave", "exited"] as const;
 export const TASK_STATUSES = ["todo", "doing", "done", "blocked"] as const;
 export const TASK_PRIORITIES = ["low", "medium", "high"] as const;

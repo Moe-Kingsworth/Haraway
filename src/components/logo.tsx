@@ -9,10 +9,11 @@ export function LogoMark({ className }: { className?: string }) {
     >
       <rect width="32" height="32" rx="8" className="fill-primary" />
       <path
-        d="M8 23h16M10.5 18.5h11M13 14h6M15.2 9.5h1.6"
+        d="M7.5 15.5 16 9l8.5 6.5M10.5 14v9h11v-9M14.5 23v-4.5h3V23"
         className="stroke-primary-foreground"
         strokeWidth="1.8"
         strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
       />
     </svg>
@@ -21,7 +22,7 @@ export function LogoMark({ className }: { className?: string }) {
 
 export function Wordmark({
   inverted = false,
-  name = "Aso Terrace",
+  name = "Eden Shelters",
 }: {
   inverted?: boolean;
   name?: string;
@@ -39,7 +40,7 @@ export function Wordmark({
           {name}
         </p>
         <p className={cn("text-xs tracking-wide uppercase", inverted ? "text-sidebar-muted" : "text-muted-foreground")}>
-          Abuja
+          Staff Portal
         </p>
       </div>
     </div>

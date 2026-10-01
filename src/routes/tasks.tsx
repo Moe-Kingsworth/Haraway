@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { TASK_PRIORITIES, TASK_STATUSES } from "@/lib/constants";
+import { isAdmin as checkIsAdmin, TASK_PRIORITIES, TASK_STATUSES } from "@/lib/constants";
 import { formatDate } from "@/lib/format";
 import { getBootstrap } from "@/lib/server/access";
 import { listStaff, listTasks, upsertTask } from "@/lib/server/people";
@@ -30,7 +30,7 @@ function TasksPage() {
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
   const tasks = useQuery({ queryKey: ["tasks"], queryFn: () => listTasks() });
   const staff = useQuery({ queryKey: ["staff"], queryFn: () => listStaff() });
-  const isAdmin = boot.data?.access.role === "admin";
+  const isAdmin = boot.data?.access ? checkIsAdmin(boot.data.access.role) : false;
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<TaskRow | null>(null);
 
