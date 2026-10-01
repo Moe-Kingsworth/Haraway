@@ -117,9 +117,9 @@ export async function resolveAccess(userId: string): Promise<Access> {
       userId: m.company_owner_id,
       companyName: "Eden Shelters",
       tagline: "Estate operations, Abuja",
-      address: "Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT",
+      address: "F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja",
       phone: "+234 9 461 2200",
-      email: "ops@asoterrace.ng",
+      email: "ops@edenshelters.ng",
       rcNumber: "RC 1847291",
     };
 
@@ -341,16 +341,16 @@ async function seedWorkspaceInner(sql: Sql, userId: string, profile: UserRow): P
       ${userId},
       ${"Eden Shelters"},
       ${"Estate operations, Abuja"},
-      ${"Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT"},
+      ${"F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja"},
       ${"+234 9 461 2200"},
-      ${"ops@asoterrace.ng"},
+      ${"ops@edenshelters.ng"},
       ${"RC 1847291"}
     )
   `;
 
   const tag = tagFrom(userId);
   const ownerName = profile.name?.trim() || "Ibrahim Abdullahi";
-  const ownerEmail = profile.email?.trim() || `md.${tag}@asoterrace.ng`;
+  const ownerEmail = profile.email?.trim() || `md.${tag}@edenshelters.ng`;
 
   const people: Array<{
     name: string;

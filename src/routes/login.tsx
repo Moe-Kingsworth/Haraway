@@ -53,7 +53,7 @@ function Login() {
       <section className="relative hidden flex-col justify-between bg-sidebar px-10 py-10 text-sidebar-foreground lg:flex">
         <Wordmark inverted />
         <div className="max-w-md">
-          <p className="text-xs tracking-[0.2em] text-sidebar-muted uppercase">Wuse II · Abuja</p>
+          <p className="text-xs tracking-[0.2em] text-sidebar-muted uppercase">Garki · Abuja</p>
           <h1 className="mt-3 font-display text-4xl font-medium tracking-tight">
             The house, the people, the closings — on one desk.
           </h1>
@@ -62,7 +62,7 @@ function Login() {
             Built for a terrace house that actually sells.
           </p>
         </div>
-        <p className="text-xs text-sidebar-muted">Plot 42, Aminu Kano Crescent · RC 1847291</p>
+        <p className="text-xs text-sidebar-muted">F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja · RC 1847291</p>
       </section>
 
       <section className="flex flex-col justify-center px-6 py-12">

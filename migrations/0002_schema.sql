@@ -4,9 +4,9 @@ create table if not exists workspaces (
   user_id text primary key,
   company_name text not null default 'Eden Shelters',
   tagline text not null default 'Estate operations, Abuja',
-  address text not null default 'Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT',
+  address text not null default 'F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja',
   phone text not null default '+234 9 461 2200',
-  email text not null default 'ops@asoterrace.ng',
+  email text not null default 'ops@edenshelters.ng',
   rc_number text not null default 'RC 1847291',
   seeded_at timestamptz,
   created_at timestamptz not null default now()
@@ -185,3 +185,6 @@ create table if not exists payments (
   created_at timestamptz not null default now()
 );
 create index if not exists payments_user_id_idx on payments (user_id);
+
+update workspaces set address = 'F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja' where address like '%Aminu Kano%';
+update workspaces set email = 'ops@edenshelters.ng' where email like '%asoterrace%';

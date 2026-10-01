@@ -168,9 +168,9 @@ const FALLBACK_WORKSPACE: Workspace = {
   userId: "",
   companyName: "Eden Shelters",
   tagline: "Estate operations, Abuja",
-  address: "Plot 42, Aminu Kano Crescent, Wuse II, Abuja, FCT",
+  address: "F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja",
   phone: "+234 9 461 2200",
-  email: "ops@asoterrace.ng",
+  email: "ops@edenshelters.ng",
   rcNumber: "RC 1847291",
 };
 
