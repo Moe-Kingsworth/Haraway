@@ -59,6 +59,8 @@ export function mapStaff(row: {
   bank_name: string | null;
   account_number: string | null;
   notes: string | null;
+  employee_id?: string | null;
+  position?: string | null;
 }): Staff {
   const isFounder = Boolean(row.is_founder_account);
   const mustChange = Boolean(row.must_change_password);
@@ -78,6 +80,8 @@ export function mapStaff(row: {
     is_founder_account: isFounder,
     mustChangePassword: mustChange,
     must_change_password: mustChange,
+    employeeId: row.employee_id ?? `ES-${String(row.id).padStart(4, "0")}`,
+    position: row.position ?? (row.department === "Executive" ? "Executive Director" : "Associate"),
     bankName: row.bank_name,
     accountNumber: row.account_number,
     notes: row.notes,
@@ -730,7 +734,8 @@ export const getBootstrap = createServerFn({ method: "GET" })
     if (access.staffId) {
       const rows = await sql<Parameters<typeof mapStaff>[0]>`
         select id, full_name, email, phone, role, department, employment_type,
-               salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes
+               salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes,
+               employee_id, position
         from staff where id = ${access.staffId} and user_id = ${access.ownerId}
       `;
       me = rows[0] ? mapStaff(rows[0]) : null;

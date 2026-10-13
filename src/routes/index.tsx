@@ -15,6 +15,8 @@ import { clockToday } from "@/lib/server/people";
 import { roleLabel } from "@/lib/constants";
 import { formatNgn, formatNgnCompact, formatTimeWAT, isWeekend, monthLabel, todayWAT } from "@/lib/format";
 
+import { SuperAdminDashboard } from "@/components/super-admin-dashboard";
+
 export const Route = createFileRoute("/")({ component: Home });
 
 function Stat({
@@ -43,6 +45,7 @@ function Home() {
   const boot = useQuery({ queryKey: ["bootstrap"], queryFn: () => getBootstrap() });
   const d = dash.data;
   const firstName = boot.data?.access.displayName?.trim().split(/\s+/)[0];
+  const role = boot.data?.access.role;
   const today = todayWAT();
   const [year, month] = today.split("-").map(Number);
   const meId = boot.data?.access.staffId;
@@ -57,6 +60,14 @@ function Home() {
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
+  if (role === "super_admin") {
+    return (
+      <AppShell>
+        <SuperAdminDashboard />
+      </AppShell>
+    );
+  }
 
   return (
     <AppShell>

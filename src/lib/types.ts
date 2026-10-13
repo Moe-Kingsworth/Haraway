@@ -40,6 +40,8 @@ export type Staff = {
   is_founder_account: boolean;
   mustChangePassword: boolean;
   must_change_password: boolean;
+  employeeId?: string | null;
+  position?: string | null;
   bankName: string | null;
   accountNumber: string | null;
   notes: string | null;
@@ -191,4 +193,86 @@ export type DashboardData = {
   collections: { month: string; amount: number }[];
   recentPayments: Payment[];
   attention: { kind: string; title: string; href: string }[];
+};
+
+export type AuditLogEntry = {
+  id: number;
+  actorName: string;
+  action: string;
+  target: string;
+  timestamp: string;
+  details?: Record<string, string | number | boolean | null> | null;
+};
+
+export type SuperAdminAttendanceRow = {
+  id?: number | null;
+  staffId: number;
+  name: string;
+  department: string;
+  clockIn: string | null;
+  clockOut: string | null;
+  status: "Complete" | "Incomplete" | "Absent" | "On Leave";
+};
+
+export type SuperAdminDashboardData = {
+  attendanceRows: SuperAdminAttendanceRow[];
+  summary: {
+    totalPresent: number;
+    totalAbsent: number;
+    incomplete: number;
+    onLeave: number;
+  };
+  auditLogs: AuditLogEntry[];
+  staffSummary: {
+    totalActive: number;
+    suspended: number;
+    createdThisMonth: number;
+  };
+};
+
+export type JobPosting = {
+  id: string;
+  title: string;
+  department: string;
+  employmentType: string;
+  location: string;
+  description: string;
+  requirements: string;
+  responsibilities: string;
+  status: "draft" | "published" | "unpublished";
+  createdBy?: number | null;
+  createdAt: string;
+  applicationsCount?: number;
+};
+
+export type JobApplication = {
+  id: string;
+  jobPostingId: string;
+  jobTitle?: string;
+  jobDepartment?: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  yearsExperience: number;
+  currentJobTitle: string;
+  coverLetter: string;
+  cvUrl: string;
+  linkedinUrl?: string | null;
+  portfolioUrl?: string | null;
+  referralSource: string;
+  status:
+    | "applied"
+    | "under_review"
+    | "shortlisted"
+    | "interview_scheduled"
+    | "interview_done"
+    | "selected"
+    | "rejected"
+    | "onboarded";
+  internalNotes?: string | null;
+  interviewDate?: string | null;
+  interviewFormat?: string | null;
+  rejectionReason?: string | null;
+  convertedToStaffId?: number | null;
+  createdAt: string;
 };

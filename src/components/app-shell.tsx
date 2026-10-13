@@ -16,6 +16,10 @@ import {
   Briefcase,
   Home,
   Landmark,
+  UserCog,
+  History,
+  UserPlus,
+  FileText,
 } from "lucide-react";
 import { signOut } from "@/lib/auth/client";
 import { UserButton } from "@/lib/auth/gates";
@@ -44,10 +48,28 @@ const NAV = [
     roles: ["super_admin", "executive", "hr_admin", "finance", "team_lead", "secretary", "staff"],
   },
   {
+    href: "/users",
+    label: "Users",
+    icon: UserCog,
+    roles: ["super_admin"],
+  },
+  {
     href: "/staff",
     label: "People",
     icon: Users,
     roles: ["super_admin", "hr_admin", "executive"],
+  },
+  {
+    href: "/applications",
+    label: "Applications",
+    icon: UserPlus,
+    roles: ["super_admin", "hr_admin", "executive"],
+  },
+  {
+    href: "/jobs",
+    label: "Job Postings",
+    icon: FileText,
+    roles: ["super_admin", "hr_admin"],
   },
   {
     href: "/attendance",
@@ -96,6 +118,12 @@ const NAV = [
     label: "Receipts",
     icon: Receipt,
     roles: ["super_admin", "executive", "hr_admin", "finance"],
+  },
+  {
+    href: "/audit-log",
+    label: "Audit Log",
+    icon: History,
+    roles: ["super_admin"],
   },
   {
     href: "/settings",
