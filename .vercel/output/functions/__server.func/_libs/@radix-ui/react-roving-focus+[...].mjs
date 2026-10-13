@@ -1,8 +1,8 @@
 import { o as __toESM } from "../../_runtime.mjs";
 import { u as require_react } from "../@floating-ui/react-dom+[...].mjs";
-import { a as useComposedRefs, n as createContextScope, o as require_jsx_runtime, t as createCollection } from "./react-collection+[...].mjs";
+import { n as useLayoutEffect2, o as useComposedRefs, r as createContextScope, s as require_jsx_runtime, t as createCollection } from "./react-collection+[...].mjs";
+import { _ as useId, g as useControllableState, h as Primitive, m as useCallbackRef } from "./react-dialog+[...].mjs";
 import { t as composeEventHandlers } from "../radix-ui__primitive.mjs";
-import { _ as useId, g as useControllableState, h as Primitive, m as useCallbackRef, v as useLayoutEffect2 } from "./react-dialog+[...].mjs";
 import { t as useDirection } from "../radix-ui__react-direction.mjs";
 //#region node_modules/@radix-ui/react-use-is-hydrated/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
@@ -49,6 +49,14 @@ var EVENT_OPTIONS = {
 var GROUP_NAME = "RovingFocusGroup";
 var [Collection, useCollection, createCollectionScope] = createCollection(GROUP_NAME);
 var [createRovingFocusGroupContext, createRovingFocusGroupScope] = createContextScope(GROUP_NAME, [createCollectionScope]);
+var Orientation = {
+	Vertical: "vertical",
+	Horizontal: "horizontal"
+};
+var Direction = {
+	LTR: "ltr",
+	RTL: "rtl"
+};
 var [RovingFocusProvider, useRovingFocusContext] = createRovingFocusGroupContext(GROUP_NAME);
 var RovingFocusGroup = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function RovingFocusGroup2(props, forwardedRef) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Collection.Provider, {
@@ -210,14 +218,14 @@ var MAP_KEY_TO_FOCUS_INTENT = {
 	End: "last"
 };
 function getDirectionAwareKey(key, dir) {
-	if (dir !== "rtl") return key;
+	if (dir !== Direction.RTL) return key;
 	return key === "ArrowLeft" ? "ArrowRight" : key === "ArrowRight" ? "ArrowLeft" : key;
 }
 __name(getDirectionAwareKey, "getDirectionAwareKey");
 function getFocusIntent(event, orientation, dir) {
 	const key = getDirectionAwareKey(event.key, dir);
-	if (orientation === "vertical" && ["ArrowLeft", "ArrowRight"].includes(key)) return void 0;
-	if (orientation === "horizontal" && ["ArrowUp", "ArrowDown"].includes(key)) return void 0;
+	if (orientation === Orientation.Vertical && ["ArrowLeft", "ArrowRight"].includes(key)) return;
+	if (orientation === Orientation.Horizontal && ["ArrowUp", "ArrowDown"].includes(key)) return;
 	return MAP_KEY_TO_FOCUS_INTENT[key];
 }
 __name(getFocusIntent, "getFocusIntent");
@@ -234,7 +242,5 @@ function wrapArray(array, startIndex) {
 	return array.map((_, index) => array[(startIndex + index) % array.length]);
 }
 __name(wrapArray, "wrapArray");
-var Root = RovingFocusGroup;
-var Item = RovingFocusGroupItem;
 //#endregion
-export { Root as n, createRovingFocusGroupScope as r, Item as t };
+export { RovingFocusGroupItem as n, createRovingFocusGroupScope as r, RovingFocusGroup as t };

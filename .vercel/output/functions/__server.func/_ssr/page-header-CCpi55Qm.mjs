@@ -1,4 +1,4 @@
-import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { s as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/page-header-CCpi55Qm.js
 var import_jsx_runtime = require_jsx_runtime();
 function PageHeader({ kicker, title, description, actions }) {

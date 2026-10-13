@@ -1,4 +1,4 @@
-import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { s as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { E as initials, b as avatarTone } from "./format-D0gwmfzM.mjs";
 import { n as cn } from "./button-BcOzCNJ3.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/person-chip-BGIyBziT.js

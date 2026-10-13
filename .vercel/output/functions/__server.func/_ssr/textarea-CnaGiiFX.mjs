@@ -1,6 +1,6 @@
 import { o as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "../_libs/@floating-ui/react-dom+[...].mjs";
-import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
+import { s as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { n as cn } from "./button-BcOzCNJ3.mjs";
 //#region node_modules/.nitro/vite/services/ssr/assets/textarea-CnaGiiFX.js
 var import_react = /* @__PURE__ */ __toESM(require_react());

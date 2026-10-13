@@ -1,35 +1,14 @@
 import { o as __toESM } from "../../_runtime.mjs";
 import { l as require_react_dom, u as require_react } from "../@floating-ui/react-dom+[...].mjs";
-import { a as useComposedRefs, i as createSlot, n as createContextScope, o as require_jsx_runtime, t as createCollection } from "./react-collection+[...].mjs";
+import { a as createSlot, n as useLayoutEffect2, o as useComposedRefs, r as createContextScope, s as require_jsx_runtime, t as createCollection } from "./react-collection+[...].mjs";
+import { _ as useId, c as ReactRemoveScroll, d as Portal, f as FocusScope, g as useControllableState, h as Primitive, l as useFocusGuards, m as useCallbackRef, p as DismissableLayer, s as hideOthers, u as Presence } from "./react-dialog+[...].mjs";
 import { t as composeEventHandlers } from "../radix-ui__primitive.mjs";
-import { _ as useId, c as ReactRemoveScroll, d as Portal, f as FocusScope, g as useControllableState, h as Primitive, l as useFocusGuards, m as useCallbackRef, p as DismissableLayer, s as hideOthers, u as Presence, v as useLayoutEffect2 } from "./react-dialog+[...].mjs";
 import { t as useDirection } from "../radix-ui__react-direction.mjs";
 import { t as clamp } from "../radix-ui__number.mjs";
-import { i as createPopperScope, n as Content, r as Root2, t as Anchor } from "./react-popper+[...].mjs";
-//#region node_modules/@radix-ui/react-use-previous/dist/index.mjs
+import { i as createPopperScope, n as PopperAnchor, r as PopperContent, t as Popper } from "./react-popper+[...].mjs";
+//#region node_modules/@radix-ui/react-visually-hidden/dist/index.mjs
 var import_react_dom = /* @__PURE__ */ __toESM(require_react_dom(), 1);
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
-var __defProp$1 = Object.defineProperty;
-var __name$1 = (target, value) => __defProp$1(target, "name", {
-	value,
-	configurable: true
-});
-function usePrevious(value) {
-	const ref = import_react.useRef({
-		value,
-		previous: value
-	});
-	return import_react.useMemo(() => {
-		if (ref.current.value !== value) {
-			ref.current.previous = ref.current.value;
-			ref.current.value = value;
-		}
-		return ref.current.previous;
-	}, [value]);
-}
-__name$1(usePrevious, "usePrevious");
-//#endregion
-//#region node_modules/@radix-ui/react-visually-hidden/dist/index.mjs
 var import_jsx_runtime = require_jsx_runtime();
 var VISUALLY_HIDDEN_STYLES = Object.freeze({
 	position: "absolute",
@@ -50,6 +29,14 @@ var __name = (target, value) => __defProp(target, "name", {
 	value,
 	configurable: true
 });
+var Position = {
+	ItemAligned: "item-aligned",
+	Popper: "popper"
+};
+var Direction = {
+	LTR: "ltr",
+	RTL: "rtl"
+};
 var OPEN_KEYS = [
 	" ",
 	"Enter",
@@ -83,6 +70,15 @@ function SelectProvider(props) {
 		caller: SELECT_NAME
 	});
 	const triggerPointerDownPosRef = import_react.useRef(null);
+	const hasConsumerStoppedPropagationRef = import_react.useRef(false);
+	const [userSelection, setUserSelection] = import_react.useState(null);
+	const handleUserSelect = /* @__PURE__ */ __name((nextValue) => {
+		setUserSelection({
+			value: nextValue,
+			hasConsumerStoppedPropagation: hasConsumerStoppedPropagationRef.current
+		});
+		setValue(nextValue);
+	}, "handleUserSelect");
 	const initialValueRef = import_react.useRef(value);
 	import_react.useEffect(() => {
 		const associatedForm = form ? trigger?.ownerDocument.getElementById(form) : trigger?.form;
@@ -121,6 +117,9 @@ function SelectProvider(props) {
 		contentId,
 		value,
 		onValueChange: setValue,
+		hasConsumerStoppedPropagationRef,
+		userSelection,
+		onUserSelect: handleUserSelect,
 		open,
 		onOpenChange: setOpen,
 		dir: direction,
@@ -133,7 +132,7 @@ function SelectProvider(props) {
 		nativeSelectKey,
 		isFormControl
 	};
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Root2, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Popper, {
 		...popperScope,
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectProviderImpl, {
 			scope: __scopeSelect,
@@ -171,7 +170,7 @@ var SelectTrigger = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __na
 	const [searchRef, handleTypeaheadSearch, resetTypeahead] = useTypeaheadSearch((search) => {
 		const enabledItems = getItems().filter((item) => !item.disabled);
 		const nextItem = findNextItem(enabledItems, search, enabledItems.find((item) => item.value === context.value));
-		if (nextItem !== void 0) context.onValueChange(nextItem.value);
+		if (nextItem !== void 0) context.onUserSelect(nextItem.value);
 	});
 	const handleOpen = /* @__PURE__ */ __name((pointerEvent) => {
 		if (!isDisabled) {
@@ -183,7 +182,7 @@ var SelectTrigger = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __na
 			y: Math.round(pointerEvent.pageY)
 		};
 	}, "handleOpen");
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Anchor, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PopperAnchor, {
 		asChild: true,
 		...popperScope,
 		children: /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.button, {
@@ -215,7 +214,10 @@ var SelectTrigger = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __na
 			}),
 			onKeyDown: composeEventHandlers(triggerProps.onKeyDown, (event) => {
 				const isTypingAhead = searchRef.current !== "";
-				if (!(event.ctrlKey || event.altKey || event.metaKey) && event.key.length === 1) handleTypeaheadSearch(event.key);
+				if (!(event.ctrlKey || event.altKey || event.metaKey) && event.key.length === 1) {
+					context.hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+					handleTypeaheadSearch(event.key);
+				}
 				if (isTypingAhead && event.key === " ") return;
 				if (OPEN_KEYS.includes(event.key)) {
 					handleOpen();
@@ -304,7 +306,7 @@ var [SelectContentProvider, useSelectContentContext] = createSelectContext(CONTE
 var Slot = createSlot("SelectContent.RemoveScroll");
 var SelectContentImpl = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function SelectContentImpl2(props, forwardedRef) {
 	const { __scopeSelect } = props;
-	const { position = "item-aligned", onCloseAutoFocus, onEscapeKeyDown, onPointerDownOutside, side, sideOffset, align, alignOffset, arrowPadding, collisionBoundary, collisionPadding, sticky, hideWhenDetached, avoidCollisions, ...contentProps } = props;
+	const { position = Position.ItemAligned, onCloseAutoFocus, onEscapeKeyDown, onPointerDownOutside, side, sideOffset, align, alignOffset, arrowPadding, collisionBoundary, collisionPadding, sticky, hideWhenDetached, avoidCollisions, ...contentProps } = props;
 	const context = useSelectContext(CONTENT_NAME, __scopeSelect);
 	const [content, setContent] = import_react.useState(null);
 	const [viewport, setViewport] = import_react.useState(null);
@@ -314,6 +316,8 @@ var SelectContentImpl = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ 
 	const getItems = useCollection(__scopeSelect);
 	const [isPositioned, setIsPositioned] = import_react.useState(false);
 	const firstValidItemFoundRef = import_react.useRef(false);
+	const firstItemFoundRef = import_react.useRef(false);
+	const firstItemTextFoundRef = import_react.useRef(false);
 	import_react.useEffect(() => {
 		if (content) return hideOthers(content);
 	}, [content]);
@@ -390,18 +394,24 @@ var SelectContentImpl = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ 
 		if (nextItem) setTimeout(() => nextItem.ref.current?.focus());
 	});
 	const itemRefCallback = import_react.useCallback((node, value, disabled) => {
+		const isFirstItem = !firstItemFoundRef.current;
+		if (isFirstItem) firstItemFoundRef.current = true;
 		const isFirstValidItem = !firstValidItemFoundRef.current && !disabled;
 		if (context.value !== void 0 && context.value === value || isFirstValidItem) {
 			setSelectedItem(node);
 			if (isFirstValidItem) firstValidItemFoundRef.current = true;
-		}
+		} else if (isFirstItem) setSelectedItem(node);
 	}, [context.value]);
 	const handleItemLeave = import_react.useCallback(() => content?.focus(), [content]);
 	const itemTextRefCallback = import_react.useCallback((node, value, disabled) => {
+		if (!node) return;
+		const isFirstItem = !firstItemTextFoundRef.current;
+		if (isFirstItem) firstItemTextFoundRef.current = true;
 		const isFirstValidItem = !firstValidItemFoundRef.current && !disabled;
 		if (context.value !== void 0 && context.value === value || isFirstValidItem) setSelectedItemText(node);
+		else if (isFirstItem) setSelectedItemText(node);
 	}, [context.value]);
-	const SelectPosition = position === "popper" ? SelectPopperPosition : SelectItemAlignedPosition;
+	const SelectPosition = position === Position.Popper ? SelectPopperPosition : SelectItemAlignedPosition;
 	const popperContentProps = SelectPosition === SelectPopperPosition ? {
 		side,
 		sideOffset,
@@ -508,7 +518,7 @@ var SelectItemAlignedPosition = /* @__PURE__ */ import_react.forwardRef(/* @__PU
 			const contentRect = content.getBoundingClientRect();
 			const valueNodeRect = context.valueNode.getBoundingClientRect();
 			const itemTextRect = selectedItemText.getBoundingClientRect();
-			if (context.dir !== "rtl") {
+			if (context.dir !== Direction.RTL) {
 				const itemTextOffset = itemTextRect.left - contentRect.left;
 				const left = valueNodeRect.left - itemTextOffset;
 				const leftDelta = triggerRect.left - left;
@@ -619,7 +629,7 @@ var SelectItemAlignedPosition = /* @__PURE__ */ import_react.forwardRef(/* @__PU
 var SelectPopperPosition = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function SelectPopperPosition2(props, forwardedRef) {
 	const { __scopeSelect, align = "start", collisionPadding = CONTENT_MARGIN, ...popperProps } = props;
 	const popperScope = usePopperScope(__scopeSelect);
-	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Content, {
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(PopperContent, {
 		...popperScope,
 		...popperProps,
 		ref: forwardedRef,
@@ -701,12 +711,12 @@ var SelectItem = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(
 	const composedRefs = useComposedRefs(forwardedRef, handleItemRefCallback);
 	const textId = useId();
 	const pointerTypeRef = import_react.useRef("touch");
-	const handleSelect = /* @__PURE__ */ __name(() => {
-		if (!disabled) {
-			context.onValueChange(value);
-			context.onOpenChange(false);
-		}
-	}, "handleSelect");
+	function handleSelect(event) {
+		context.hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+		context.onUserSelect(value);
+		context.onOpenChange(false);
+	}
+	__name(handleSelect, "handleSelect");
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(SelectItemContextProvider, {
 		scope: __scopeSelect,
 		value,
@@ -734,11 +744,13 @@ var SelectItem = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(
 				ref: composedRefs,
 				onFocus: composeEventHandlers(itemProps.onFocus, () => setIsFocused(true)),
 				onBlur: composeEventHandlers(itemProps.onBlur, () => setIsFocused(false)),
-				onClick: composeEventHandlers(itemProps.onClick, () => {
-					if (pointerTypeRef.current !== "mouse") handleSelect();
+				onClick: composeEventHandlers(itemProps.onClick, (event) => {
+					if (disabled) return;
+					if (pointerTypeRef.current !== "mouse") handleSelect(event);
 				}),
-				onPointerUp: composeEventHandlers(itemProps.onPointerUp, () => {
-					if (pointerTypeRef.current === "mouse") handleSelect();
+				onPointerUp: composeEventHandlers(itemProps.onPointerUp, (event) => {
+					if (disabled) return;
+					if (pointerTypeRef.current === "mouse") handleSelect(event);
 				}),
 				onPointerDown: composeEventHandlers(itemProps.onPointerDown, (event) => {
 					pointerTypeRef.current = event.pointerType;
@@ -754,7 +766,7 @@ var SelectItem = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(
 				onKeyDown: composeEventHandlers(itemProps.onKeyDown, (event) => {
 					if (disabled || event.target !== event.currentTarget) return;
 					if (contentContext.searchRef?.current !== "" && event.key === " ") return;
-					if (SELECTION_KEYS.includes(event.key)) handleSelect();
+					if (SELECTION_KEYS.includes(event.key)) handleSelect(event);
 					if (event.key === " ") event.preventDefault();
 				})
 			})
@@ -808,24 +820,43 @@ var SelectItemIndicator = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ *
 var BUBBLE_INPUT_NAME = "SelectBubbleInput";
 var SelectBubbleInput = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function SelectBubbleInput2({ __scopeSelect, ...props }, forwardedRef) {
 	const context = useSelectContext(BUBBLE_INPUT_NAME, __scopeSelect);
-	const { value, onValueChange, required, disabled, name, autoComplete, form } = context;
+	const { value, onValueChange, required, disabled, name, autoComplete, form, userSelection } = context;
 	const { nativeOptions, nativeSelectKey } = context;
 	const ref = import_react.useRef(null);
 	const composedRefs = useComposedRefs(forwardedRef, ref);
 	const selectValue = value ?? "";
-	const prevValue = usePrevious(selectValue);
+	const prevValueRef = import_react.useRef(selectValue);
+	const handledUserSelectionRef = import_react.useRef(userSelection);
+	const isDispatchingUserSelectionRef = import_react.useRef(false);
 	const hasEmptyValueOption = Array.from(nativeOptions).some((option) => (option.props.value ?? "") === "");
 	import_react.useEffect(() => {
 		const select = ref.current;
 		if (!select) return;
 		const selectProto = window.HTMLSelectElement.prototype;
 		const setValue = Object.getOwnPropertyDescriptor(selectProto, "value").set;
-		if (prevValue !== selectValue && setValue) {
-			const event = new Event("change", { bubbles: true });
+		const isNewUserSelection = userSelection !== null && userSelection !== handledUserSelectionRef.current;
+		handledUserSelectionRef.current = userSelection;
+		const valueChanged = prevValueRef.current !== selectValue;
+		prevValueRef.current = selectValue;
+		const isUserInteraction = isNewUserSelection && valueChanged;
+		if (isNewUserSelection && !valueChanged && userSelection.value !== selectValue && !userSelection.hasConsumerStoppedPropagation && setValue) {
+			isDispatchingUserSelectionRef.current = true;
+			try {
+				setValue.call(select, userSelection.value);
+				select.dispatchEvent(new Event("change", { bubbles: true }));
+			} finally {
+				isDispatchingUserSelectionRef.current = false;
+				setValue.call(select, selectValue);
+			}
+			return;
+		}
+		const bubbles = isUserInteraction && !userSelection.hasConsumerStoppedPropagation;
+		if (valueChanged && setValue) {
+			const event = new Event("change", { bubbles });
 			setValue.call(select, selectValue);
 			select.dispatchEvent(event);
 		}
-	}, [prevValue, selectValue]);
+	}, [selectValue, userSelection]);
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)(Primitive.select, {
 		"aria-hidden": true,
 		required,
@@ -834,7 +865,9 @@ var SelectBubbleInput = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ 
 		autoComplete,
 		disabled,
 		form,
-		onChange: (event) => onValueChange(event.target.value),
+		onChange: (event) => {
+			if (!isDispatchingUserSelectionRef.current) onValueChange(event.target.value);
+		},
 		...props,
 		style: {
 			...VISUALLY_HIDDEN_STYLES,
@@ -860,11 +893,13 @@ function useTypeaheadSearch(onSearchChange) {
 	const handleTypeaheadSearch = import_react.useCallback((key) => {
 		const search = searchRef.current + key;
 		handleSearchChange(search);
-		(/* @__PURE__ */ __name((function updateSearch(value) {
+		function updateSearch(value) {
 			searchRef.current = value;
 			window.clearTimeout(timerRef.current);
 			if (value !== "") timerRef.current = window.setTimeout(() => updateSearch(""), 1e3);
-		}), "updateSearch"))(search);
+		}
+		__name(updateSearch, "updateSearch");
+		updateSearch(search);
 	}, [handleSearchChange]);
 	const resetTypeahead = import_react.useCallback(() => {
 		searchRef.current = "";

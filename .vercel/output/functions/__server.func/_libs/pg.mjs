@@ -815,7 +815,9 @@ var require_defaults = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 //#region node_modules/pg/lib/utils.js
 var require_utils$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var defaults = require_defaults();
+	var nodeUtils$2 = __require("util");
 	var { isDate } = __require("util/types");
+	var invalidDateDeprecationNotice = nodeUtils$2.deprecate(() => {}, "Sending an invalid date to Postgres is deprecated and will throw an error in the next major version of pg. Ensure any Date object passed as a query parameter is valid.", "PG_INVALID_DATE");
 	function escapeElement(elementRepresentation) {
 		return "\"" + elementRepresentation.replace(/\\/g, "\\\\").replace(/"/g, "\\\"") + "\"";
 	}
@@ -840,6 +842,7 @@ var require_utils$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			if (val instanceof Buffer) return val;
 			if (ArrayBuffer.isView(val)) return Buffer.from(val.buffer, val.byteOffset, val.byteLength);
 			if (isDate(val)) {
+				if (isNaN(val.getTime())) invalidDateDeprecationNotice();
 				if (defaults.parseInputDatesAsUTC) return dateToStringUTC(val);
 				else return dateToString(val);
 			}
@@ -881,13 +884,17 @@ var require_utils$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		return ret;
 	}
 	function normalizeQueryConfig(config, values, callback) {
-		config = typeof config === "string" ? { text: config } : config;
+		config = typeof config === "string" ? { text: config } : cloneQueryConfig(config);
 		if (values) {
 			if (typeof values === "function") config.callback = values;
 			else config.values = values;
 		}
 		if (callback) config.callback = callback;
 		return config;
+	}
+	function cloneQueryConfig(config) {
+		if (config == null) return config;
+		return Object.defineProperties(Object.create(Object.getPrototypeOf(config)), Object.getOwnPropertyDescriptors(config));
 	}
 	var escapeIdentifier = function(str) {
 		return "\"" + str.replace(/"/g, "\"\"") + "\"";
@@ -1293,7 +1300,7 @@ var require_pg_connection_string = /* @__PURE__ */ __commonJSMin(((exports, modu
 			config.client_encoding = result.searchParams.get("encoding");
 			return config;
 		}
-		const hostname = dummyHost ? "" : result.hostname;
+		const hostname = (dummyHost ? "" : result.hostname).replace(/^\[(.+)\]$/, "$1");
 		if (!config.host) config.host = decodeURIComponent(hostname);
 		else if (hostname && /^%2f/i.test(hostname)) result.pathname = hostname + result.pathname;
 		if (!config.port) config.port = result.port;
@@ -1653,7 +1660,7 @@ var require_query$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			return null;
 		}
 		hasBeenParsed(connection) {
-			return this.name && (connection.parsedStatements[this.name] || connection.submittedNamedStatements[this.name]);
+			return this.name && (connection.parsedStatements[this.name] !== void 0 || connection.submittedNamedStatements[this.name] !== void 0);
 		}
 		handlePortalSuspended(connection) {
 			this._getRows(connection, this.rows);
@@ -1884,7 +1891,7 @@ var require_buffer_writer = /* @__PURE__ */ __commonJSMin(((exports) => {
 				const oldBuffer = this.buffer;
 				const newSize = oldBuffer.length + (oldBuffer.length >> 1) + size;
 				this.buffer = Buffer.allocUnsafe(newSize);
-				oldBuffer.copy(this.buffer);
+				oldBuffer.copy(this.buffer, 0, 0, this.offset);
 			}
 		}
 		addInt32(num) {
@@ -1937,6 +1944,15 @@ var require_buffer_writer = /* @__PURE__ */ __commonJSMin(((exports) => {
 			otherBuffer.copy(this.buffer, this.offset);
 			this.offset += otherBuffer.length;
 			return this;
+		}
+		/**
+		* Appends an uninitialized block of {@link size} bytes to the buffer and returns its offset.
+		*/
+		reserveUnsafe(size) {
+			const offset = this.offset;
+			this.ensure(size);
+			this.offset += size;
+			return offset;
 		}
 		join(code) {
 			if (code) {
@@ -2008,21 +2024,20 @@ var require_serializer = /* @__PURE__ */ __commonJSMin(((exports) => {
 		for (let i = 0; i < len; i++) buffer.addInt32(types[i]);
 		return writer.flush(80);
 	};
-	var paramWriter = new buffer_writer_1.Writer();
-	var writeValues = function(values, valueMapper) {
-		for (let i = 0; i < values.length; i++) {
+	var writeValues = function(values, valueMapper, formatsOffset) {
+		const len = values.length;
+		for (let i = 0; i < len; i++) {
 			const mappedVal = valueMapper ? valueMapper(values[i], i) : values[i];
-			if (mappedVal == null) {
-				writer.addInt16(0);
-				paramWriter.addInt32(-1);
-			} else if (mappedVal instanceof Buffer) {
-				writer.addInt16(1);
-				paramWriter.addInt32(mappedVal.length);
-				paramWriter.add(mappedVal);
-			} else {
-				writer.addInt16(0);
-				paramWriter.addInt32PrefixedString(mappedVal);
-			}
+			let formatByte = 0;
+			if (mappedVal == null) writer.addInt32(-1);
+			else if (mappedVal instanceof Buffer) {
+				formatByte = 1;
+				writer.addInt32(mappedVal.length);
+				writer.add(mappedVal);
+			} else writer.addInt32PrefixedString(mappedVal);
+			const buf = writer.buffer;
+			buf[formatsOffset++] = 0;
+			buf[formatsOffset++] = formatByte;
 		}
 	};
 	var bind = (config = {}) => {
@@ -2033,15 +2048,14 @@ var require_serializer = /* @__PURE__ */ __commonJSMin(((exports) => {
 		const len = values.length;
 		writer.addCString(portal).addCString(statement);
 		writer.addInt16(len);
+		const formatsOffset = writer.reserveUnsafe(len * 2);
+		writer.addInt16(len);
 		try {
-			writeValues(values, config.valueMapper);
+			writeValues(values, config.valueMapper, formatsOffset);
 		} catch (err) {
 			writer.clear();
-			paramWriter.clear();
 			throw err;
 		}
-		writer.addInt16(len);
-		writer.add(paramWriter.flush());
 		writer.addInt16(1);
 		writer.addInt16(binary ? 1 : 0);
 		return writer.flush(66);
@@ -2637,7 +2651,10 @@ var require_connection = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		}
 		upgradeToSSL(host, reportStreamError) {
 			const self = this;
-			const options = { socket: self.stream };
+			const options = {
+				socket: self.stream,
+				host
+			};
 			if (self.ssl !== true) {
 				Object.assign(options, self.ssl);
 				if ("key" in self.ssl) options.key = self.ssl.key;
@@ -2699,7 +2716,6 @@ var require_connection = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			if (this.stream.writable) this.stream.write(flushBuffer);
 		}
 		sync() {
-			this._ending = true;
 			this._send(syncBuffer);
 		}
 		ref() {
@@ -3493,6 +3509,15 @@ var require_client$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			}
 			if (this.binary && !query.binary) query.binary = true;
 			if (query._result && !query._result._types) query._result._types = this._types;
+			if (this.pipeline) {
+				const portalQuery = typeof config.submit === "function" && !(query instanceof Query) ? "Custom query classes such as pg-cursor and pg-query-stream are" : query.rows ? "The `rows` option is" : null;
+				if (portalQuery) {
+					process.nextTick(() => {
+						query.handleError(/* @__PURE__ */ new Error(`${portalQuery} not supported in pipeline mode`), this.connection);
+					});
+					return result;
+				}
+			}
 			if (!this._queryable) {
 				process.nextTick(() => {
 					query.handleError(/* @__PURE__ */ new Error("Client has encountered a connection error and is not queryable"), this.connection);
@@ -3926,6 +3951,8 @@ var require_query = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		sqlState: "code",
 		statementPosition: "position",
 		messagePrimary: "message",
+		messageDetail: "detail",
+		messageHint: "hint",
 		context: "where",
 		schemaName: "schema",
 		tableName: "table",
@@ -3993,7 +4020,7 @@ var require_query = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				console.error("This can cause conflicts and silent errors executing queries");
 			}
 			const values = (this.values || []).map(utils.prepareValue);
-			if (client.namedQueries[this.name]) {
+			if (client.namedQueries[this.name] !== void 0) {
 				if (this.text && client.namedQueries[this.name] !== this.text) {
 					const err = /* @__PURE__ */ new Error(`Prepared statements must be unique - '${this.name}' was used for a different statement`);
 					return after(err);
@@ -4241,7 +4268,8 @@ var require_client = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			const values = query.values ? query.values.map(utils.prepareValue) : null;
 			const pipelineEntry = {
 				text: query.text,
-				name: query.name
+				name: query.name,
+				arrayMode: query._arrayMode
 			};
 			if (values) pipelineEntry.values = values;
 			if (query.name && this.namedQueries[query.name]) pipelineEntry._alreadyPrepared = true;
@@ -4250,12 +4278,16 @@ var require_client = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 		this.native.pipeline(queries, function(err, results) {
 			self._pipelineInFlight = false;
 			if (err) {
+				self._connected = false;
+				self._queryable = false;
 				for (let i = 0; i < nativeQueries.length; i++) {
 					const q = nativeQueries[i];
 					q.native = self.native;
 					q.handleError(err);
 				}
-				self._pulsePipelinedQueryQueue();
+				self._errorAllQueries(err);
+				self.emit("error", err);
+				self.emit("end");
 				return;
 			}
 			for (let i = 0; i < nativeQueries.length; i++) {

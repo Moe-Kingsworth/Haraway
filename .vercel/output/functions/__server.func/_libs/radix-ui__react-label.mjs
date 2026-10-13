@@ -1,6 +1,6 @@
 import { o as __toESM } from "../_runtime.mjs";
 import { u as require_react } from "./@floating-ui/react-dom+[...].mjs";
-import { o as require_jsx_runtime } from "./@radix-ui/react-collection+[...].mjs";
+import { s as require_jsx_runtime } from "./@radix-ui/react-collection+[...].mjs";
 import { h as Primitive } from "./@radix-ui/react-dialog+[...].mjs";
 //#region node_modules/@radix-ui/react-label/dist/index.mjs
 var import_react = /* @__PURE__ */ __toESM(require_react(), 1);
@@ -10,7 +10,7 @@ var __name = (target, value) => __defProp(target, "name", {
 	value,
 	configurable: true
 });
-var Root = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function Label2(props, forwardedRef) {
+var Label = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function Label2(props, forwardedRef) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.label, {
 		...props,
 		ref: forwardedRef,
@@ -22,4 +22,4 @@ var Root = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(functi
 	});
 }, "Label"));
 //#endregion
-export { Root as t };
+export { Label as t };
