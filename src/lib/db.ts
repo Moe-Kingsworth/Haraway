@@ -3,18 +3,23 @@ import { pendingMigrations } from "../../scripts/migration-plan.mjs";
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite";
 
-// An empty/whitespace DATABASE_URL (an easy misconfig in deploy UIs) must mean
-// "unset" — otherwise production would silently run on the PGLite fallback.
+// DATABASE_URL is used for connection pooling / queries.
+// DIRECT_URL is used for direct connection / migrations (e.g. Supabase pgbouncer bypass).
 const rawDatabaseUrl =
   typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
-const databaseUrl =
+export const databaseUrl =
   rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
 
+const rawDirectUrl =
+  typeof process !== "undefined" ? process.env.DIRECT_URL : undefined;
+export const directUrl =
+  rawDirectUrl && rawDirectUrl.trim() ? rawDirectUrl : databaseUrl;
+
 /**
- * Active backend: real **Neon** when `DATABASE_URL` is set (deployed / configured
- * sandbox), otherwise a local embedded **PGLite** (Postgres compiled to WASM) so
+ * Active backend: real Postgres/Supabase when `DATABASE_URL` is set,
+ * otherwise a local embedded **PGLite** (Postgres compiled to WASM) so
  * the app has a working database even with nothing configured — the live preview
- * included. Swap in Neon later by just setting `DATABASE_URL`; no code changes.
+ * included.
  */
 export const dbSource: DbSource = databaseUrl ? "neon" : "pglite";
 
@@ -210,29 +215,73 @@ export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite
 }
 
 /**
+ * Run pending migrations against PostgreSQL using `DIRECT_URL` (falling back to `DATABASE_URL`).
+ */
+export async function runMigrations(): Promise<void> {
+  const connectionUrl = directUrl || databaseUrl;
+  if (!connectionUrl) return;
+  const { Pool } = await import("pg");
+  const pool = new Pool({ connectionString: connectionUrl, max: 1 });
+  const client = await pool.connect();
+  try {
+    await client.query(
+      "create table if not exists _migrations (name text primary key, applied_at timestamptz not null default now())",
+    );
+    const doneRows = await client.query<{ name: string }>(
+      "select name from _migrations",
+    );
+    const done = doneRows.rows.map((r) => r.name);
+    const migrations = import.meta.glob("/migrations/*.sql", {
+      query: "?raw",
+      import: "default",
+      eager: true,
+    }) as Record<string, string>;
+    for (const { name, path } of pendingMigrations(Object.keys(migrations), done)) {
+      await client.query("BEGIN");
+      try {
+        await client.query(migrations[path]);
+        await client.query("insert into _migrations (name) values ($1)", [name]);
+        await client.query("COMMIT");
+      } catch (err) {
+        await client.query("ROLLBACK").catch(() => {});
+        throw err;
+      }
+    }
+  } finally {
+    client.release();
+    await pool.end();
+  }
+}
+
+/**
  * Finish DB bootstrap before the server handles traffic.
  *
  * - **PGLite** (preview / no `DATABASE_URL`): open the in-memory DB and apply
  *   `migrations/*.sql`. Idempotent — concurrent callers share one promise.
- * - **Neon**: no-op (pool is created lazily on first query).
+ * - **Postgres / Supabase**: apply pending migrations via `DIRECT_URL`.
  *
  * Vite `configureServer` awaits this at dev startup; production imports of this
  * module kick it off immediately (see bottom of file).
  */
 export function ensureDbReady(): Promise<void> {
-  if (dbSource !== "pglite") return Promise.resolve();
-  return getSql().then(() => undefined);
+  if (dbSource === "pglite") {
+    return getSql().then(() => undefined);
+  }
+  if (directUrl || databaseUrl) {
+    return runMigrations();
+  }
+  return Promise.resolve();
 }
 
-// Server-only eager start: kick PGLite bootstrap as soon as this module loads in
+// Server-only eager start: kick DB bootstrap as soon as this module loads in
 // Node. Client bundles never hit this path (`getSql` throws in the browser).
 const globalBoot = globalThis as typeof globalThis & {
   __pgBootstrapPromise__?: Promise<void>;
 };
-if (typeof window === "undefined" && dbSource === "pglite") {
+if (typeof window === "undefined") {
   globalBoot.__pgBootstrapPromise__ ??= ensureDbReady().catch((err) => {
     globalBoot.__pgBootstrapPromise__ = undefined;
-    console.error("[db] PGLite bootstrap failed:", err);
+    console.error("[db] DB bootstrap failed:", err);
     throw err;
   });
 }
