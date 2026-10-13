@@ -1,9 +1,9 @@
 import { r as createServerFn } from "./ssr.mjs";
 import { t as createServerRpc } from "./createServerRpc-CcvdN_gc.mjs";
-import { r as getSql } from "./db-D5YkZJMd.mjs";
-import { E as isAdmin, y as authMiddleware } from "./format-C4QtlH6B.mjs";
-import { c as tsStr, o as num, r as dateStr, s as resolveAccess, t as assertAdmin } from "./access-C-5ORgon.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/crm-DzQWrwkZ.js
+import { r as getSql } from "./db-DoLgY7gq.mjs";
+import { E as isAdmin, y as authMiddleware } from "./format-D4GR9uBi.mjs";
+import { c as tsStr, o as num, r as dateStr, s as resolveAccess, t as assertAdmin } from "./access-DQucFu62.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/crm-BFJ1e5Eq.js
 var listClients_createServerFn_handler = createServerRpc({
 	id: "c1db5569404235c31597f22f3305a9d5227aef7a96072cb9cbc23397ff1af32e",
 	name: "listClients",

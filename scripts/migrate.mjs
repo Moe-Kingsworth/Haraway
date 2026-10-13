@@ -22,8 +22,23 @@ try {
   process.loadEnvFile?.();
 } catch {}
 
-const migrationUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!migrationUrl || migrationUrl.includes("[YOUR-")) {
+function normalizeDbUrl(url) {
+  if (!url || !url.trim()) return undefined;
+  let s = url.trim();
+  if (s.includes("[YOUR-")) return undefined;
+  const m = s.match(/^(postgres(?:ql)?:\/\/)([^:]+):(.+)@([^@\/]+(?::\d+)?)(.*)$/);
+  if (m) {
+    let pwd = m[3];
+    if (pwd.startsWith("[") && pwd.endsWith("]")) pwd = pwd.slice(1, -1);
+    pwd = decodeURIComponent(pwd);
+    return m[1] + m[2] + ":" + encodeURIComponent(pwd) + "@" + m[4] + m[5];
+  }
+  return s;
+}
+
+const rawMigrationUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
+const migrationUrl = normalizeDbUrl(rawMigrationUrl);
+if (!migrationUrl) {
   console.log(
     "[migrate] DIRECT_URL / DATABASE_URL not set or placeholder — skipping (the PGLite fallback migrates itself).",
   );

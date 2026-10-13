@@ -3,21 +3,29 @@ import { pendingMigrations } from "../../scripts/migration-plan.mjs";
 /** Which database backend is active. */
 export type DbSource = "neon" | "pglite";
 
+function normalizeDbUrl(url: string | undefined): string | undefined {
+  if (!url || !url.trim()) return undefined;
+  let s = url.trim();
+  if (s.includes("[YOUR-")) return undefined;
+  const m = s.match(/^(postgres(?:ql)?:\/\/)([^:]+):(.+)@([^@\/]+(?::\d+)?)(.*)$/);
+  if (m) {
+    let pwd = m[3];
+    if (pwd.startsWith("[") && pwd.endsWith("]")) pwd = pwd.slice(1, -1);
+    pwd = decodeURIComponent(pwd);
+    return m[1] + m[2] + ":" + encodeURIComponent(pwd) + "@" + m[4] + m[5];
+  }
+  return s;
+}
+
 // DATABASE_URL is used for connection pooling / queries.
 // DIRECT_URL is used for direct connection / migrations (e.g. Supabase pgbouncer bypass).
 const rawDatabaseUrl =
   typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
-export const databaseUrl =
-  rawDatabaseUrl && rawDatabaseUrl.trim() && !rawDatabaseUrl.includes("[YOUR-")
-    ? rawDatabaseUrl
-    : undefined;
+export const databaseUrl = normalizeDbUrl(rawDatabaseUrl);
 
 const rawDirectUrl =
   typeof process !== "undefined" ? process.env.DIRECT_URL : undefined;
-export const directUrl =
-  rawDirectUrl && rawDirectUrl.trim() && !rawDirectUrl.includes("[YOUR-")
-    ? rawDirectUrl
-    : databaseUrl;
+export const directUrl = normalizeDbUrl(rawDirectUrl) || databaseUrl;
 
 /**
  * Active backend: real Postgres/Supabase when `DATABASE_URL` is set,
@@ -224,6 +232,7 @@ export async function getPglite(): Promise<import("@electric-sql/pglite").PGlite
 export async function runMigrations(): Promise<void> {
   const connectionUrl = directUrl || databaseUrl;
   if (!connectionUrl) return;
+  if (typeof import.meta.glob !== "function") return;
   const { Pool } = await import("pg");
   const pool = new Pool({ connectionString: connectionUrl, max: 1 });
   const client = await pool.connect();

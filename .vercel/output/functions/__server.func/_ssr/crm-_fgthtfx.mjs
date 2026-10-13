@@ -1,7 +1,7 @@
 import { r as createServerFn } from "./ssr.mjs";
-import { y as authMiddleware } from "./format-C4QtlH6B.mjs";
+import { y as authMiddleware } from "./format-D4GR9uBi.mjs";
 import { t as createSsrRpc } from "./createSsrRpc-B2Izd0c7.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/crm-D01a7qtV.js
+//#region node_modules/.nitro/vite/services/ssr/assets/crm-_fgthtfx.js
 var listClients = createServerFn({ method: "GET" }).middleware([authMiddleware]).handler(createSsrRpc("c1db5569404235c31597f22f3305a9d5227aef7a96072cb9cbc23397ff1af32e"));
 var upsertClient = createServerFn({ method: "POST" }).middleware([authMiddleware]).validator((input) => input).handler(createSsrRpc("05ab7cbfc47bd5fbf8fe3beeafdffdeb8c9a5da55ec6c0ae60e150d8f643ce75"));
 var listProperties = createServerFn({ method: "GET" }).middleware([authMiddleware]).handler(createSsrRpc("f33bbc0e040b4db94f74c4a6ed712eedc1d5b4cd350b1cf7eacdf664f59a5aa5"));

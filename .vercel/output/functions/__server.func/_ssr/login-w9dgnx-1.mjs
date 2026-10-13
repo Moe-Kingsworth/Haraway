@@ -4,9 +4,9 @@ import { y as Navigate } from "../_libs/@tanstack/react-router+[...].mjs";
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
 import { t as authClient } from "./client-BzrKyXF3.mjs";
 import { a as useCurrentUserState, n as Wordmark, t as Button } from "./button-BFe-DrCJ.mjs";
-import "./server-DuFP1eda.mjs";
+import "./server-aRKW7mtF.mjs";
 import { n as Label, t as Input } from "./label-ZHM-2AwH.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/login-BXUeqM3I.js
+//#region node_modules/.nitro/vite/services/ssr/assets/login-w9dgnx-1.js
 var import_react = /* @__PURE__ */ __toESM(require_react());
 var import_jsx_runtime = require_jsx_runtime();
 function Login() {

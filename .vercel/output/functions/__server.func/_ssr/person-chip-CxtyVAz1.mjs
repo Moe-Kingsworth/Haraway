@@ -1,7 +1,7 @@
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
-import { T as initials, b as avatarTone } from "./format-C4QtlH6B.mjs";
+import { T as initials, b as avatarTone } from "./format-D4GR9uBi.mjs";
 import { r as cn } from "./button-BFe-DrCJ.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/person-chip-CzKnXgm5.js
+//#region node_modules/.nitro/vite/services/ssr/assets/person-chip-CxtyVAz1.js
 var import_jsx_runtime = require_jsx_runtime();
 function PersonChip({ id, name, meta, size = "md", badge }) {
 	return /* @__PURE__ */ (0, import_jsx_runtime.jsxs)("div", {

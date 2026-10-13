@@ -1,7 +1,7 @@
 import { r as createServerFn } from "./ssr.mjs";
-import { y as authMiddleware } from "./format-C4QtlH6B.mjs";
+import { y as authMiddleware } from "./format-D4GR9uBi.mjs";
 import { t as createSsrRpc } from "./createSsrRpc-B2Izd0c7.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/people--qAw_zZ6.js
+//#region node_modules/.nitro/vite/services/ssr/assets/people-COEULSv7.js
 var listStaff = createServerFn({ method: "GET" }).middleware([authMiddleware]).handler(createSsrRpc("63f578b0001a0076ae4ad6802503147e33eb149b3792a3c64021fd5217c0bf9b"));
 var upsertStaff = createServerFn({ method: "POST" }).middleware([authMiddleware]).validator((input) => input).handler(createSsrRpc("3cd65b1299964a539175fc797d57cf4b1a1ae4454a82ce2be0170735e01eacec"));
 var listAttendance = createServerFn({ method: "GET" }).middleware([authMiddleware]).validator((input) => input).handler(createSsrRpc("c3cb4cf8fb5d688d0766adebc89152d72e18b78ae115d9d2629ce4c187253ca6"));

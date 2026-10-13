@@ -1,6 +1,6 @@
 import { o as require_jsx_runtime } from "../_libs/@radix-ui/react-collection+[...].mjs";
-import { n as Badge } from "./app-shell-C-yh9NZ7.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/status-badge-BnbKImqs.js
+import { n as Badge } from "./app-shell-IxbYO5pr.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/status-badge-exVilp-T.js
 var import_jsx_runtime = require_jsx_runtime();
 var MAP = {
 	active: {

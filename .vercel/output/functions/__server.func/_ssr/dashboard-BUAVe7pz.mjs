@@ -1,9 +1,9 @@
 import { r as createServerFn } from "./ssr.mjs";
 import { t as createServerRpc } from "./createServerRpc-CcvdN_gc.mjs";
-import { r as getSql } from "./db-D5YkZJMd.mjs";
-import { E as isAdmin, j as todayWAT, y as authMiddleware } from "./format-C4QtlH6B.mjs";
-import { c as tsStr, o as num, r as dateStr, s as resolveAccess } from "./access-C-5ORgon.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/dashboard-DOqACH3S.js
+import { r as getSql } from "./db-DoLgY7gq.mjs";
+import { E as isAdmin, j as todayWAT, y as authMiddleware } from "./format-D4GR9uBi.mjs";
+import { c as tsStr, o as num, r as dateStr, s as resolveAccess } from "./access-DQucFu62.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/dashboard-BUAVe7pz.js
 var getDashboard_createServerFn_handler = createServerRpc({
 	id: "9db85427a1c24a4946624e0d3df9e6cbf4f6db0a0617124b39eec33b6ee26c12",
 	name: "getDashboard",
@@ -118,7 +118,7 @@ var getDashboard = createServerFn({ method: "GET" }).middleware([authMiddleware]
 		inOffice: inOffice.map((r) => ({
 			id: r.id,
 			name: r.name,
-			role: r.role,
+			role: r.role || "staff",
 			status: r.status,
 			clockIn: tsStr(r.clock_in)
 		})),

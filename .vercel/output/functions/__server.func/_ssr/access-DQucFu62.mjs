@@ -1,14 +1,19 @@
 import { r as createServerFn } from "./ssr.mjs";
-import { t as createServerRpc } from "./createServerRpc-CcvdN_gc.mjs";
-import { r as getSql } from "./db-D5YkZJMd.mjs";
-import { E as isAdmin, j as todayWAT, m as ROLES, v as asNumber, y as authMiddleware } from "./format-C4QtlH6B.mjs";
-//#region node_modules/.nitro/vite/services/ssr/assets/access-RymPKwJr.js
+import { r as getSql } from "./db-DoLgY7gq.mjs";
+import { E as isAdmin, j as todayWAT, m as ROLES, v as asNumber, y as authMiddleware } from "./format-D4GR9uBi.mjs";
+import { t as createSsrRpc } from "./createSsrRpc-B2Izd0c7.mjs";
+//#region node_modules/.nitro/vite/services/ssr/assets/access-DQucFu62.js
 function num(v) {
 	return asNumber(v);
 }
 function dateStr(v) {
 	if (v instanceof Date) return v.toISOString().slice(0, 10);
 	return String(v ?? "").slice(0, 10);
+}
+function tsStr(v) {
+	if (v == null) return null;
+	if (v instanceof Date) return v.toISOString();
+	return String(v);
 }
 function workspaceFrom(row) {
 	return {
@@ -148,29 +153,10 @@ async function resolveAccess(userId) {
 function assertAdmin(access) {
 	if (!isAdmin(access.role)) throw new Error("Only the operations desk can do that.");
 }
-var updateWorkspace_createServerFn_handler = createServerRpc({
-	id: "307ebd22eadb9040a7f79e567076ff01578ac2fea2a0d1fb2db7adeaf1afe30a",
-	name: "updateWorkspace",
-	filename: "src/lib/server/access.ts"
-}, (opts) => updateWorkspace.__executeServer(opts));
-var updateWorkspace = createServerFn({ method: "POST" }).middleware([authMiddleware]).validator((input) => input).handler(updateWorkspace_createServerFn_handler, async ({ context, data }) => {
-	const access = await resolveAccess(context.userId);
-	assertAdmin(access);
-	const sql = await getSql();
-	const companyName = data.companyName.trim();
-	if (!companyName) throw new Error("The firm needs a name.");
-	await sql`
-      update workspaces set
-        company_name = ${companyName},
-        tagline = ${data.tagline.trim()},
-        address = ${data.address.trim()},
-        phone = ${data.phone.trim()},
-        email = ${data.email.trim()},
-        rc_number = ${data.rcNumber.trim()}
-      where user_id = ${access.ownerId}
-    `;
-	return { ok: true };
-});
+function assertNotFounder(staff, action) {
+	if (staff.is_founder_account || staff.isFounderAccount) throw new Error(`Cannot ${action} the founder account.`);
+}
+var updateWorkspace = createServerFn({ method: "POST" }).middleware([authMiddleware]).validator((input) => input).handler(createSsrRpc("307ebd22eadb9040a7f79e567076ff01578ac2fea2a0d1fb2db7adeaf1afe30a"));
 var seedLocks = /* @__PURE__ */ new Map();
 function tagFrom(userId) {
 	return userId.replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toLowerCase() || "desk";
@@ -1007,34 +993,6 @@ async function seedWorkspaceInner(sql, userId, profile) {
     `;
 	await sql`update workspaces set seeded_at = now() where user_id = ${userId}`;
 }
-var getBootstrap_createServerFn_handler = createServerRpc({
-	id: "ab0f6919d1abc1a6f722233cd57a641cc24c202e51a4b60e04036381156313cb",
-	name: "getBootstrap",
-	filename: "src/lib/server/access.ts"
-}, (opts) => getBootstrap.__executeServer(opts));
-var getBootstrap = createServerFn({ method: "GET" }).middleware([authMiddleware]).handler(getBootstrap_createServerFn_handler, async ({ context }) => {
-	const access = await resolveAccess(context.userId);
-	const sql = await getSql();
-	let me = null;
-	if (access.staffId) {
-		const rows = await sql`
-        select id, full_name, email, phone, role, department, employment_type,
-               salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
-        from staff where id = ${access.staffId} and user_id = ${access.ownerId}
-      `;
-		me = rows[0] ? mapStaff(rows[0]) : null;
-	}
-	const isFounderAccount = access.isFounderAccount || Boolean(me?.isFounderAccount);
-	return {
-		access: {
-			...access,
-			isAdmin: access.isAdmin,
-			isFounderAccount
-		},
-		me,
-		isAdmin: access.isAdmin,
-		isFounderAccount
-	};
-});
+var getBootstrap = createServerFn({ method: "GET" }).middleware([authMiddleware]).handler(createSsrRpc("ab0f6919d1abc1a6f722233cd57a641cc24c202e51a4b60e04036381156313cb"));
 //#endregion
-export { getBootstrap_createServerFn_handler, updateWorkspace_createServerFn_handler };
+export { mapStaff as a, tsStr as c, getBootstrap as i, updateWorkspace as l, assertNotFounder as n, num as o, dateStr as r, resolveAccess as s, assertAdmin as t };
