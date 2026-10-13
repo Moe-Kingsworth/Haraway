@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AttendanceRouteImport } from './routes/attendance'
+import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as DealsRouteImport } from './routes/deals'
 import { Route as DeskRouteImport } from './routes/desk'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const AttendanceRoute = AttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChangePasswordRoute = ChangePasswordRouteImport.update({
+  id: '/change-password',
+  path: '/change-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ClientsRoute = ClientsRouteImport.update({
@@ -110,6 +116,7 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/attendance': typeof AttendanceRoute
+  '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/attendance': typeof AttendanceRoute
+  '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/attendance': typeof AttendanceRoute
+  '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/attendance'
+    | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/attendance'
+    | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/attendance'
+    | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
@@ -222,6 +234,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AttendanceRoute: typeof AttendanceRoute
+  ChangePasswordRoute: typeof ChangePasswordRoute
   ClientsRoute: typeof ClientsRoute
   DealsRoute: typeof DealsRoute
   DeskRoute: typeof DeskRoute
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/attendance'
       fullPath: '/attendance'
       preLoaderRoute: typeof AttendanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/change-password': {
+      id: '/change-password'
+      path: '/change-password'
+      fullPath: '/change-password'
+      preLoaderRoute: typeof ChangePasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/clients': {
@@ -358,6 +378,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AttendanceRoute: AttendanceRoute,
+  ChangePasswordRoute: ChangePasswordRoute,
   ClientsRoute: ClientsRoute,
   DealsRoute: DealsRoute,
   DeskRoute: DeskRoute,

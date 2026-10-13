@@ -13,7 +13,7 @@ export const listStaff = createServerFn({ method: "GET" })
     const sql = await getSql();
     const rows = await sql<Parameters<typeof mapStaff>[0]>`
       select id, full_name, email, phone, role, department, employment_type,
-             salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
+             salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes
       from staff where user_id = ${access.ownerId} order by is_owner desc, full_name
     `;
     const mapped = rows.map(mapStaff);
@@ -50,7 +50,7 @@ export const upsertStaff = createServerFn({ method: "POST" })
     if (data.id) {
       const targetRows = await sql<Parameters<typeof mapStaff>[0]>`
         select id, full_name, email, phone, role, department, employment_type,
-               salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
+               salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes
         from staff where id = ${data.id} and user_id = ${access.ownerId}
       `;
       if (!targetRows[0]) throw new Error("Staff not found.");

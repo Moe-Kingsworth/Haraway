@@ -38,6 +38,8 @@ export type Staff = {
   isOwner: boolean;
   isFounderAccount: boolean;
   is_founder_account: boolean;
+  mustChangePassword: boolean;
+  must_change_password: boolean;
   bankName: string | null;
   accountNumber: string | null;
   notes: string | null;

@@ -55,11 +55,13 @@ export function mapStaff(row: {
   status: string;
   is_owner: boolean;
   is_founder_account?: boolean | null;
+  must_change_password?: boolean | null;
   bank_name: string | null;
   account_number: string | null;
   notes: string | null;
 }): Staff {
   const isFounder = Boolean(row.is_founder_account);
+  const mustChange = Boolean(row.must_change_password);
   return {
     id: row.id,
     fullName: row.full_name,
@@ -74,6 +76,8 @@ export function mapStaff(row: {
     isOwner: Boolean(row.is_owner),
     isFounderAccount: isFounder,
     is_founder_account: isFounder,
+    mustChangePassword: mustChange,
+    must_change_password: mustChange,
     bankName: row.bank_name,
     accountNumber: row.account_number,
     notes: row.notes,
@@ -81,10 +85,33 @@ export function mapStaff(row: {
 }
 
 async function loadUser(sql: Sql, userId: string): Promise<UserRow> {
-  const rows = await sql<UserRow>`
-    select "id", "name", "email" from "user" where "id" = ${userId}
+  try {
+    const rows = await sql<UserRow>`
+      select "id", "name", "email" from "user" where "id" = ${userId}
+    `;
+    if (rows[0]) return rows[0];
+  } catch {}
+
+  const staffRows = await sql<{ full_name: string; email: string }>`
+    select full_name, email from staff where user_id = ${userId} limit 1
   `;
-  return rows[0] ?? { id: userId, name: "Managing Director", email: "md@asoterrace.ng" };
+  if (staffRows[0]) {
+    return { id: userId, name: staffRows[0].full_name, email: staffRows[0].email };
+  }
+
+  const mem = await sql<{ staff_id: number | null }>`
+    select staff_id from memberships where user_id = ${userId} limit 1
+  `;
+  if (mem[0]?.staff_id) {
+    const s = await sql<{ full_name: string; email: string }>`
+      select full_name, email from staff where id = ${mem[0].staff_id}
+    `;
+    if (s[0]) {
+      return { id: userId, name: s[0].full_name, email: s[0].email };
+    }
+  }
+
+  return { id: userId, name: "Managing Director", email: "md@edenshelters.ng" };
 }
 
 async function loadWorkspace(sql: Sql, ownerId: string): Promise<Workspace | null> {
@@ -703,7 +730,7 @@ export const getBootstrap = createServerFn({ method: "GET" })
     if (access.staffId) {
       const rows = await sql<Parameters<typeof mapStaff>[0]>`
         select id, full_name, email, phone, role, department, employment_type,
-               salary_ngn, hire_date, status, is_owner, is_founder_account, bank_name, account_number, notes
+               salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes
         from staff where id = ${access.staffId} and user_id = ${access.ownerId}
       `;
       me = rows[0] ? mapStaff(rows[0]) : null;
@@ -721,4 +748,40 @@ export const getBootstrap = createServerFn({ method: "GET" })
     };
   });
 
+export const getLoginStaffProfile = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const access = await resolveAccess(context.userId);
+    const sql = await getSql();
+    let me: Staff | null = null;
+    if (access.staffId) {
+      const rows = await sql<Parameters<typeof mapStaff>[0]>`
+        select id, full_name, email, phone, role, department, employment_type,
+               salary_ngn, hire_date, status, is_owner, is_founder_account, must_change_password, bank_name, account_number, notes
+        from staff where id = ${access.staffId} and user_id = ${access.ownerId}
+      `;
+      me = rows[0] ? mapStaff(rows[0]) : null;
+    }
+    return {
+      role: access.role,
+      status: me?.status ?? "active",
+      mustChangePassword: me?.mustChangePassword ?? false,
+    };
+  });
+
+export const completePasswordChange = createServerFn({ method: "POST" })
+  .middleware([authMiddleware])
+  .handler(async ({ context }) => {
+    const access = await resolveAccess(context.userId);
+    const sql = await getSql();
+    if (access.staffId) {
+      await sql`
+        update staff set must_change_password = false
+        where id = ${access.staffId}
+      `;
+    }
+    return { ok: true, role: access.role };
+  });
+
 export type { MemberRole };
+

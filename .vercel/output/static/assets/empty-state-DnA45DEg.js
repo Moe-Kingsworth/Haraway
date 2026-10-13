@@ -1,0 +1,1 @@
+import{c as e}from"./preload-helper-NG-SYgdC.js";var t=e();function n({title:e,hint:n}){return(0,t.jsxs)(`div`,{className:`rounded-xl border border-dashed border-border bg-card px-6 py-12 text-center`,children:[(0,t.jsx)(`p`,{className:`font-medium`,children:e}),n?(0,t.jsx)(`p`,{className:`mt-1 text-sm text-muted-foreground`,children:n}):null]})}export{n as t};

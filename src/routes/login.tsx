@@ -1,159 +1,159 @@
 import { type FormEvent, useState } from "react";
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { GROK_PROVIDERS, authClient, authEnabled, signIn } from "@/lib/auth/client";
-import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { Eye, EyeOff } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Wordmark } from "@/components/logo";
+import { setBearerToken, signOut } from "@/lib/auth/client";
+import { useCurrentUserState } from "@/lib/auth/use-current-user";
+import { getRoleLandingPath } from "@/lib/constants";
+import { getLoginStaffProfile } from "@/lib/server/access";
+import { supabase } from "@/lib/supabase";
 
-export const Route = createFileRoute("/login")({ component: Login });
+export const Route = createFileRoute("/login")({ component: LoginPage });
 
-function Login() {
+function LoginPage() {
   const { user, isPending } = useCurrentUserState();
-  const [mode, setMode] = useState<"in" | "up">("in");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  if (user) return <Navigate to="/" />;
+  if (!isPending && user) {
+    return <Navigate to="/" />;
+  }
 
-  async function onEmail(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    setError(null);
+    if (busy) return;
     setBusy(true);
+
     try {
-      if (mode === "up") {
-        const res = await authClient.signUp.email({
-          name: name.trim() || email.split("@")[0] || "Colleague",
-          email: email.trim(),
-          password,
-          callbackURL: "/",
-        });
-        if (res.error) throw new Error(res.error.message || "Could not create the account.");
-      } else {
-        const res = await authClient.signIn.email({
-          email: email.trim(),
-          password,
-          callbackURL: "/",
-        });
-        if (res.error) throw new Error(res.error.message || "Could not sign in.");
+      const cleanEmail = email.trim();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: cleanEmail,
+        password,
+      });
+
+      if (error || !data?.session) {
+        toast.error("Invalid email or password");
+        setBusy(false);
+        return;
       }
-      window.location.href = "/";
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong.");
+
+      // Synchronize bearer token for server functions
+      setBearerToken(data.session.access_token);
+
+      // Verify staff role & status
+      try {
+        const profile = await getLoginStaffProfile();
+
+        if (profile.status === "suspended" || profile.status === "exited") {
+          toast.error("Your account has been suspended. Contact your administrator.");
+          await signOut("/login");
+          setBusy(false);
+          return;
+        }
+
+        if (profile.mustChangePassword) {
+          window.location.href = "/change-password";
+          return;
+        }
+
+        const landing = getRoleLandingPath(profile.role);
+        window.location.href = landing;
+      } catch (err) {
+        // Fallback redirect if profile fetch fails
+        console.error("Profile resolution error:", err);
+        window.location.href = "/";
+      }
+    } catch {
+      toast.error("Invalid email or password");
       setBusy(false);
     }
   }
 
   return (
-    <main className="grid min-h-svh lg:grid-cols-2">
-      <section className="relative hidden flex-col justify-between bg-sidebar px-10 py-10 text-sidebar-foreground lg:flex">
-        <Wordmark inverted />
-        <div className="max-w-md">
-          <p className="text-xs tracking-[0.2em] text-sidebar-muted uppercase">Garki · Abuja</p>
-          <h1 className="mt-3 font-display text-4xl font-medium tracking-tight">
-            The house, the people, the closings — on one desk.
+    <main className="min-h-svh flex flex-col justify-center items-center bg-[#F9F7F4] p-4 sm:p-6">
+      <div className="w-full max-w-[420px] bg-white rounded-2xl border border-[#E8E4DD] shadow-sm p-8 sm:p-10">
+        <div className="flex flex-col items-center text-center mb-8">
+          <img
+            src="/logo.png"
+            alt="Eden Shelters"
+            className="h-10 w-auto object-contain mb-5"
+          />
+          <h1 className="font-display text-2xl font-semibold tracking-tight text-foreground">
+            Staff Portal
           </h1>
-          <p className="mt-4 text-sm leading-relaxed text-sidebar-muted">
-            Attendance, payroll, tasks and the client file, from first viewing to the receipt.
-            Built for a terrace house that actually sells.
+          <p className="mt-1 text-xs text-muted-foreground tracking-wide uppercase">
+            F8, Melita Plaza, Area 11 Garki · Abuja
           </p>
         </div>
-        <p className="text-xs text-sidebar-muted">F8, Melita Plaza, Gimbiya Street, Area 11 Garki FCT, Abuja · RC 1847291</p>
-      </section>
 
-      <section className="flex flex-col justify-center px-6 py-12">
-        <div className="mx-auto w-full max-w-sm">
-          <div className="mb-8 lg:hidden">
-            <Wordmark />
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-sm font-medium">
+              Email address
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="name@edenshelters.ng"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              disabled={busy}
+              className="h-11 border-[#DDD7CD] focus-visible:ring-[#C9A84C]"
+            />
           </div>
-          <h2 className="font-display text-2xl font-medium tracking-tight">Sign in to the desk</h2>
-          <p className="mt-1 mb-6 text-sm text-muted-foreground">
-            Operations leads use Google or X. Team members join with the work email on their staff
-            file.
-          </p>
 
-          {isPending ? (
-            <p className="text-sm text-muted-foreground">Loading the desk…</p>
-          ) : (
-            <>
-              {authEnabled ? (
-                <div className="space-y-2">
-                  {GROK_PROVIDERS.map((p) => (
-                    <Button
-                      key={p.providerId}
-                      type="button"
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => signIn(p.providerId, { callbackURL: "/" })}
-                    >
-                      Continue with {p.label}
-                    </Button>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Sign-in is disabled.</p>
-              )}
-
-              <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-                <span className="h-px flex-1 bg-border" />
-                or with email
-                <span className="h-px flex-1 bg-border" />
-              </div>
-
-              <form onSubmit={onEmail} className="space-y-3">
-                {mode === "up" ? (
-                  <div className="space-y-1.5">
-                    <Label htmlFor="name">Full name</Label>
-                    <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
-                  </div>
-                ) : null}
-                <div className="space-y-1.5">
-                  <Label htmlFor="email">Work email</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    type="password"
-                    autoComplete={mode === "up" ? "new-password" : "current-password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    minLength={8}
-                    required
-                  />
-                </div>
-                {error ? <p className="text-sm text-destructive">{error}</p> : null}
-                <Button type="submit" className="w-full" disabled={busy}>
-                  {busy ? "Please wait…" : mode === "up" ? "Create account" : "Sign in"}
-                </Button>
-              </form>
-
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-sm font-medium">
+              Password
+            </Label>
+            <div className="relative">
+              <Input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={busy}
+                className="h-11 pr-11 border-[#DDD7CD] focus-visible:ring-[#C9A84C]"
+              />
               <button
                 type="button"
-                className="mt-4 text-sm text-muted-foreground hover:text-foreground"
-                onClick={() => {
-                  setMode(mode === "in" ? "up" : "in");
-                  setError(null);
-                }}
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+                className="absolute right-0 top-0 h-11 w-11 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
-                {mode === "in" ? "New to the house? Create an account" : "Already on the desk? Sign in"}
+                {showPassword ? (
+                  <EyeOff className="size-4" />
+                ) : (
+                  <Eye className="size-4" />
+                )}
               </button>
-            </>
-          )}
-        </div>
-      </section>
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            disabled={busy}
+            className="w-full h-11 bg-[#C9A84C] hover:bg-[#B8973B] text-white font-medium text-sm rounded-lg transition-colors shadow-none cursor-pointer"
+          >
+            {busy ? "Signing in…" : "Sign In"}
+          </Button>
+        </form>
+      </div>
+
+      <p className="mt-8 text-xs text-muted-foreground text-center">
+        Eden Shelters · RC 1847291 · Estate operations, Abuja
+      </p>
     </main>
   );
 }

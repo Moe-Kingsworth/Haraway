@@ -1,10 +1,11 @@
 import { useState, type ReactNode } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, Navigate, useRouterState } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   Building2,
   ClipboardList,
   LayoutDashboard,
+  LogOut,
   Menu,
   Receipt,
   ScrollText,
@@ -16,7 +17,8 @@ import {
   Home,
   Landmark,
 } from "lucide-react";
-import { RedirectToSignIn, UserButton } from "@/lib/auth/gates";
+import { signOut } from "@/lib/auth/client";
+import { UserButton } from "@/lib/auth/gates";
 import { useCurrentUserState } from "@/lib/auth/use-current-user";
 import { getBootstrap } from "@/lib/server/access";
 import { cn } from "@/lib/utils";
@@ -157,8 +159,16 @@ function SidebarBody({
         <p className="mt-3 text-xs text-sidebar-muted">{workspace.tagline}</p>
       </div>
       <NavLinks role={role} onNavigate={onNavigate} pathname={pathname} />
-      <div className="mt-auto px-5 py-5">
-        <p className="text-xs leading-relaxed text-sidebar-muted">{workspace.address}</p>
+      <div className="mt-auto px-4 py-4 border-t border-sidebar-foreground/10 space-y-3">
+        <button
+          type="button"
+          onClick={() => void signOut("/login")}
+          className="flex w-full items-center gap-2.5 rounded-sm px-3 py-2 text-sm text-sidebar-muted transition-colors hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground cursor-pointer"
+        >
+          <LogOut className="size-4 shrink-0" />
+          <span>Sign out</span>
+        </button>
+        <p className="px-3 text-xs leading-relaxed text-sidebar-muted">{workspace.address}</p>
       </div>
     </>
   );
@@ -184,7 +194,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   });
   const [open, setOpen] = useState(false);
 
-  if (isPending) {
+  if (isPending || (user && bootstrap.isLoading)) {
     return (
       <div className="flex min-h-svh">
         <aside className="hidden h-svh w-60 shrink-0 flex-col bg-sidebar md:flex">
@@ -201,7 +211,13 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (!user) return <RedirectToSignIn />;
+
+  if (!user) return <Navigate to="/login" />;
+
+  const me = bootstrap.data?.me;
+  if (me?.mustChangePassword && pathname !== "/change-password") {
+    return <Navigate to="/change-password" />;
+  }
 
   const role: Role = bootstrap.data?.access.role ?? "staff";
   const workspace = bootstrap.data?.access.workspace ?? FALLBACK_WORKSPACE;

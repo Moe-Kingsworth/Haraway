@@ -26,12 +26,14 @@ create table if not exists staff (
   status text not null default 'active',
   is_owner boolean not null default false,
   is_founder_account boolean not null default false,
+  must_change_password boolean not null default false,
   bank_name text,
   account_number text,
   notes text,
   created_at timestamptz not null default now()
 );
 alter table staff add column if not exists is_founder_account boolean not null default false;
+alter table staff add column if not exists must_change_password boolean not null default false;
 create index if not exists staff_user_id_idx on staff (user_id);
 
 create table if not exists memberships (

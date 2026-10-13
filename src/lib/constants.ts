@@ -82,6 +82,22 @@ export function roleLabel(role: Role): string {
   };
   return labels[role];
 }
+
+export function getRoleLandingPath(role: Role | string): string {
+  switch (role) {
+    case "secretary":
+      return "/attendance";
+    case "staff":
+      return "/desk";
+    case "super_admin":
+    case "executive":
+    case "hr_admin":
+    case "finance":
+    case "team_lead":
+    default:
+      return "/";
+  }
+}
 export const STAFF_STATUSES = ["active", "on_leave", "exited"] as const;
 export const TASK_STATUSES = ["todo", "doing", "done", "blocked"] as const;
 export const TASK_PRIORITIES = ["low", "medium", "high"] as const;
