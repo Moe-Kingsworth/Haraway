@@ -57,7 +57,6 @@ export const ROLES = [
 
 export type Role = (typeof ROLES)[number];
 
-// Roles that count as "admin" for backward compatibility
 export const ADMIN_ROLES: Role[] = [
   "super_admin",
   "executive",
@@ -67,11 +66,11 @@ export const ADMIN_ROLES: Role[] = [
   "secretary",
 ];
 
-export function isAdmin(role: Role | string): boolean {
-  return ADMIN_ROLES.includes(role as Role) || role === "admin";
+export function isAdmin(role: Role): boolean {
+  return ADMIN_ROLES.includes(role);
 }
 
-export function roleLabel(role: Role | string): string {
+export function roleLabel(role: Role): string {
   const labels: Record<Role, string> = {
     super_admin: "Super Admin",
     executive: "Executive",
@@ -81,7 +80,7 @@ export function roleLabel(role: Role | string): string {
     secretary: "Secretary",
     staff: "Staff",
   };
-  return (labels as Record<string, string>)[role] ?? role;
+  return labels[role];
 }
 export const STAFF_STATUSES = ["active", "on_leave", "exited"] as const;
 export const TASK_STATUSES = ["todo", "doing", "done", "blocked"] as const;

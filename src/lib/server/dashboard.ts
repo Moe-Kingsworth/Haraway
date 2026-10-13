@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { authMiddleware } from "@/lib/auth/middleware";
-import { isAdmin } from "@/lib/constants";
+import { isAdmin, type Role } from "@/lib/constants";
 import { getSql } from "@/lib/db";
 import { todayWAT } from "@/lib/format";
 import type { DashboardData, Payment } from "@/lib/types";
@@ -147,7 +147,7 @@ export const getDashboard = createServerFn({ method: "GET" })
       inOffice: inOffice.map((r) => ({
         id: r.id,
         name: r.name,
-        role: r.role,
+        role: ((r.role as Role) || "staff"),
         status: r.status,
         clockIn: tsStr(r.clock_in),
       })),

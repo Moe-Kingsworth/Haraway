@@ -8,12 +8,16 @@ export type DbSource = "neon" | "pglite";
 const rawDatabaseUrl =
   typeof process !== "undefined" ? process.env.DATABASE_URL : undefined;
 export const databaseUrl =
-  rawDatabaseUrl && rawDatabaseUrl.trim() ? rawDatabaseUrl : undefined;
+  rawDatabaseUrl && rawDatabaseUrl.trim() && !rawDatabaseUrl.includes("[YOUR-")
+    ? rawDatabaseUrl
+    : undefined;
 
 const rawDirectUrl =
   typeof process !== "undefined" ? process.env.DIRECT_URL : undefined;
 export const directUrl =
-  rawDirectUrl && rawDirectUrl.trim() ? rawDirectUrl : databaseUrl;
+  rawDirectUrl && rawDirectUrl.trim() && !rawDirectUrl.includes("[YOUR-")
+    ? rawDirectUrl
+    : databaseUrl;
 
 /**
  * Active backend: real Postgres/Supabase when `DATABASE_URL` is set,

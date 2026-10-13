@@ -185,7 +185,7 @@ export type DashboardData = {
   monthReceiptsNgn: number;
   pendingLeave: number;
   reservedProperties: number;
-  inOffice: { id: number; name: string; role: string; status: string; clockIn: string | null }[];
+  inOffice: { id: number; name: string; role: Role; status: string; clockIn: string | null }[];
   collections: { month: string; amount: number }[];
   recentPayments: Payment[];
   attention: { kind: string; title: string; href: string }[];

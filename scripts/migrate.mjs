@@ -23,9 +23,9 @@ try {
 } catch {}
 
 const migrationUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
-if (!migrationUrl) {
+if (!migrationUrl || migrationUrl.includes("[YOUR-")) {
   console.log(
-    "[migrate] DIRECT_URL / DATABASE_URL not set — skipping (the PGLite fallback migrates itself).",
+    "[migrate] DIRECT_URL / DATABASE_URL not set or placeholder — skipping (the PGLite fallback migrates itself).",
   );
   process.exit(0);
 }
