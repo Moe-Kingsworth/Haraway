@@ -10,11 +10,15 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApplicationsRouteImport } from './routes/applications'
 import { Route as AttendanceRouteImport } from './routes/attendance'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as ChangePasswordRouteImport } from './routes/change-password'
 import { Route as ClientsRouteImport } from './routes/clients'
 import { Route as DealsRouteImport } from './routes/deals'
 import { Route as DeskRouteImport } from './routes/desk'
+import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PayrollRouteImport } from './routes/payroll'
 import { Route as PerformanceRouteImport } from './routes/performance'
@@ -23,6 +27,8 @@ import { Route as ReceiptsRouteImport } from './routes/receipts'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as StaffRouteImport } from './routes/staff'
 import { Route as TasksRouteImport } from './routes/tasks'
+import { Route as UsersRouteImport } from './routes/users'
+import { Route as CareersIdRouteImport } from './routes/careers_.$id'
 import { Route as DealsIdRouteImport } from './routes/deals_.$id'
 import { Route as ReceiptsIdRouteImport } from './routes/receipts_.$id'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
@@ -32,9 +38,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApplicationsRoute = ApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AttendanceRoute = AttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChangePasswordRoute = ChangePasswordRouteImport.update({
@@ -55,6 +76,11 @@ const DealsRoute = DealsRouteImport.update({
 const DeskRoute = DeskRouteImport.update({
   id: '/desk',
   path: '/desk',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JobsRoute = JobsRouteImport.update({
+  id: '/jobs',
+  path: '/jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -97,6 +123,16 @@ const TasksRoute = TasksRouteImport.update({
   path: '/tasks',
   getParentRoute: () => rootRouteImport,
 } as any)
+const UsersRoute = UsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersIdRoute = CareersIdRouteImport.update({
+  id: '/careers_/$id',
+  path: '/careers/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DealsIdRoute = DealsIdRouteImport.update({
   id: '/deals_/$id',
   path: '/deals/$id',
@@ -115,11 +151,15 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/applications': typeof ApplicationsRoute
   '/attendance': typeof AttendanceRoute
+  '/audit-log': typeof AuditLogRoute
+  '/careers': typeof CareersRoute
   '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
+  '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
   '/payroll': typeof PayrollRoute
   '/performance': typeof PerformanceRoute
@@ -128,17 +168,23 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
   '/tasks': typeof TasksRoute
+  '/users': typeof UsersRoute
+  '/careers/$id': typeof CareersIdRoute
   '/deals/$id': typeof DealsIdRoute
   '/receipts/$id': typeof ReceiptsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/applications': typeof ApplicationsRoute
   '/attendance': typeof AttendanceRoute
+  '/audit-log': typeof AuditLogRoute
+  '/careers': typeof CareersRoute
   '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
+  '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
   '/payroll': typeof PayrollRoute
   '/performance': typeof PerformanceRoute
@@ -147,6 +193,8 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
   '/tasks': typeof TasksRoute
+  '/users': typeof UsersRoute
+  '/careers/$id': typeof CareersIdRoute
   '/deals/$id': typeof DealsIdRoute
   '/receipts/$id': typeof ReceiptsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -154,11 +202,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/applications': typeof ApplicationsRoute
   '/attendance': typeof AttendanceRoute
+  '/audit-log': typeof AuditLogRoute
+  '/careers': typeof CareersRoute
   '/change-password': typeof ChangePasswordRoute
   '/clients': typeof ClientsRoute
   '/deals': typeof DealsRoute
   '/desk': typeof DeskRoute
+  '/jobs': typeof JobsRoute
   '/login': typeof LoginRoute
   '/payroll': typeof PayrollRoute
   '/performance': typeof PerformanceRoute
@@ -167,6 +219,8 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/staff': typeof StaffRoute
   '/tasks': typeof TasksRoute
+  '/users': typeof UsersRoute
+  '/careers_/$id': typeof CareersIdRoute
   '/deals_/$id': typeof DealsIdRoute
   '/receipts_/$id': typeof ReceiptsIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -175,11 +229,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/applications'
     | '/attendance'
+    | '/audit-log'
+    | '/careers'
     | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
+    | '/jobs'
     | '/login'
     | '/payroll'
     | '/performance'
@@ -188,17 +246,23 @@ export interface FileRouteTypes {
     | '/settings'
     | '/staff'
     | '/tasks'
+    | '/users'
+    | '/careers/$id'
     | '/deals/$id'
     | '/receipts/$id'
     | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/applications'
     | '/attendance'
+    | '/audit-log'
+    | '/careers'
     | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
+    | '/jobs'
     | '/login'
     | '/payroll'
     | '/performance'
@@ -207,17 +271,23 @@ export interface FileRouteTypes {
     | '/settings'
     | '/staff'
     | '/tasks'
+    | '/users'
+    | '/careers/$id'
     | '/deals/$id'
     | '/receipts/$id'
     | '/api/auth/$'
   id:
     | '__root__'
     | '/'
+    | '/applications'
     | '/attendance'
+    | '/audit-log'
+    | '/careers'
     | '/change-password'
     | '/clients'
     | '/deals'
     | '/desk'
+    | '/jobs'
     | '/login'
     | '/payroll'
     | '/performance'
@@ -226,6 +296,8 @@ export interface FileRouteTypes {
     | '/settings'
     | '/staff'
     | '/tasks'
+    | '/users'
+    | '/careers_/$id'
     | '/deals_/$id'
     | '/receipts_/$id'
     | '/api/auth/$'
@@ -233,11 +305,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ApplicationsRoute: typeof ApplicationsRoute
   AttendanceRoute: typeof AttendanceRoute
+  AuditLogRoute: typeof AuditLogRoute
+  CareersRoute: typeof CareersRoute
   ChangePasswordRoute: typeof ChangePasswordRoute
   ClientsRoute: typeof ClientsRoute
   DealsRoute: typeof DealsRoute
   DeskRoute: typeof DeskRoute
+  JobsRoute: typeof JobsRoute
   LoginRoute: typeof LoginRoute
   PayrollRoute: typeof PayrollRoute
   PerformanceRoute: typeof PerformanceRoute
@@ -246,6 +322,8 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   StaffRoute: typeof StaffRoute
   TasksRoute: typeof TasksRoute
+  UsersRoute: typeof UsersRoute
+  CareersIdRoute: typeof CareersIdRoute
   DealsIdRoute: typeof DealsIdRoute
   ReceiptsIdRoute: typeof ReceiptsIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -260,11 +338,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/applications': {
+      id: '/applications'
+      path: '/applications'
+      fullPath: '/applications'
+      preLoaderRoute: typeof ApplicationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/attendance': {
       id: '/attendance'
       path: '/attendance'
       fullPath: '/attendance'
       preLoaderRoute: typeof AttendanceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/change-password': {
@@ -293,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/desk'
       fullPath: '/desk'
       preLoaderRoute: typeof DeskRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jobs': {
+      id: '/jobs'
+      path: '/jobs'
+      fullPath: '/jobs'
+      preLoaderRoute: typeof JobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -351,6 +457,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TasksRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/users': {
+      id: '/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof UsersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers_/$id': {
+      id: '/careers_/$id'
+      path: '/careers/$id'
+      fullPath: '/careers/$id'
+      preLoaderRoute: typeof CareersIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/deals_/$id': {
       id: '/deals_/$id'
       path: '/deals/$id'
@@ -377,11 +497,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ApplicationsRoute: ApplicationsRoute,
   AttendanceRoute: AttendanceRoute,
+  AuditLogRoute: AuditLogRoute,
+  CareersRoute: CareersRoute,
   ChangePasswordRoute: ChangePasswordRoute,
   ClientsRoute: ClientsRoute,
   DealsRoute: DealsRoute,
   DeskRoute: DeskRoute,
+  JobsRoute: JobsRoute,
   LoginRoute: LoginRoute,
   PayrollRoute: PayrollRoute,
   PerformanceRoute: PerformanceRoute,
@@ -390,6 +514,8 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   StaffRoute: StaffRoute,
   TasksRoute: TasksRoute,
+  UsersRoute: UsersRoute,
+  CareersIdRoute: CareersIdRoute,
   DealsIdRoute: DealsIdRoute,
   ReceiptsIdRoute: ReceiptsIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

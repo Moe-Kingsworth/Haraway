@@ -544,7 +544,7 @@ var HEADERS = { TSS_SHELL: "X-TSS_SHELL" };
 * the dev styles URL for route-scoped CSS collection.
 */
 async function getStartManifest(matchedRoutes) {
-	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-DdPMCbTk.mjs");
+	const { tsrStartManifest } = await import("../_tanstack-start-manifest_v-CTElt_CF.mjs");
 	const startManifest = tsrStartManifest();
 	let routes = startManifest.routes;
 	routes[rootRouteId];
@@ -566,123 +566,195 @@ async function getStartManifest(matchedRoutes) {
 var manifest = {
 	"05ab7cbfc47bd5fbf8fe3beeafdffdeb8c9a5da55ec6c0ae60e150d8f643ce75": {
 		functionName: "upsertClient_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
 	},
 	"077ce5117434f40a76369690e4f0903078bf83d15c784801ee32deffb82a70d0": {
 		functionName: "reviewLeave_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"0a0c878cfed22eb620cafc695fe65d67699f879d18bc5a69e0d05b9cc1d8fe40": {
 		functionName: "upsertDeal_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
 	},
 	"0bde0df726b74971aa81916f53deb79a915b1b63f391aa282a18aac03a2bd85a": {
 		functionName: "listDeals_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
+	},
+	"0c060563768423c0c20455891f0e8994b29b568a07660fc6243713ad323e34ce": {
+		functionName: "editUser_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"0c7dd88c03051607a5a681452d1d7990d5b8fd2d78ab70c86a99d2f45c38ce59": {
 		functionName: "requestLeave_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"0d203d19e74912dc40cc9c6182e6bd6906f6e6236dc4c6ec75ce809186c5b794": {
 		functionName: "clockToday_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"181472c3e29145e1c187199f74d151cb7b9fa360e0be5338885002ebd1415f58": {
 		functionName: "setAttendance_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"26b3bd94bbc1be973103ac16fc68cf889a08656eace8ac04ca0c9caaf62c781e": {
+		functionName: "reactivateUser_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"2c4985e96c199268f7f639534cb5e8e31d6b19d43286bf77416413db60ffde26": {
 		functionName: "fetchSessionUser_createServerFn_handler",
 		importer: () => import("../__root-CicM4wmp.mjs")
 	},
+	"2f058fec73a45b26298be15d26fd140a02f91ace744e4e9a9a700a9539f84e7b": {
+		functionName: "listJobApplications_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
+	},
 	"307ebd22eadb9040a7f79e567076ff01578ac2fea2a0d1fb2db7adeaf1afe30a": {
 		functionName: "updateWorkspace_createServerFn_handler",
-		importer: () => import("./access-CGyDluqX.mjs")
+		importer: () => import("./access-DioqvHgR.mjs")
 	},
 	"3cd65b1299964a539175fc797d57cf4b1a1ae4454a82ce2be0170735e01eacec": {
 		functionName: "upsertStaff_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"457b1a8e877518be08935717298f455a7dc51338349b6d8ba6b4b68170e74027": {
 		functionName: "completePasswordChange_createServerFn_handler",
-		importer: () => import("./access-CGyDluqX.mjs")
+		importer: () => import("./access-DioqvHgR.mjs")
 	},
 	"62145e1a106be4842906df9aa171d74a92d1a60df82dbe46f75a0a156e3347bb": {
 		functionName: "getLoginStaffProfile_createServerFn_handler",
-		importer: () => import("./access-CGyDluqX.mjs")
+		importer: () => import("./access-DioqvHgR.mjs")
 	},
 	"63f578b0001a0076ae4ad6802503147e33eb149b3792a3c64021fd5217c0bf9b": {
 		functionName: "listStaff_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"64ea221a9e5cb1d1cc13c71b854471ab66a2865bf645f4fa05ff165b84a8e841": {
+		functionName: "createUser_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
+	},
+	"69fa6ce9ae19fc55a5745705209d45bac5d7117309a0a1e07e7064eeecfc920a": {
+		functionName: "convertApplicationToStaff_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
 	},
 	"6cfdf2c29e1518d88d993eb7acb638dec5382a1f5974ce0913e578ae83b8177d": {
 		functionName: "listLeave_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"7e7488ad3a89e002aadc4376594be764dfd3000b1d9a73089689b43408b4608b": {
 		functionName: "listReviews_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"805a7ec6e9cbb8246a98c23854c430b8bff59b3058ebe2b6d45b09ab6054ebb7": {
 		functionName: "listPayroll_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"819bdd40f71dfd9f5459f2717a35ab8271f2496be8508dbe95c77e361feef0cf": {
+		functionName: "submitPublicJobApplication_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
+	},
+	"8ff428842bb49781522d3045308fc4b9413c4565e4912c7391c8e5ad80c3b07b": {
+		functionName: "listUsers_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"99136bff47d0ec90e470b6766cccfebded93cf5c443e0e08de08f81b74d22347": {
 		functionName: "processPayroll_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"9a69974c1232130ccbcfe37bf9e490456de619e98937fcac8bc3ed3e7bdaba37": {
+		functionName: "promoteSuperAdmin_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"9db85427a1c24a4946624e0d3df9e6cbf4f6db0a0617124b39eec33b6ee26c12": {
 		functionName: "getDashboard_createServerFn_handler",
-		importer: () => import("./dashboard-DNpcelA1.mjs")
+		importer: () => import("./dashboard-7lXhXEab.mjs")
+	},
+	"a69f0fe4e480becee71d673c966c34f27d213ca89bff661d89a2428f30dfebe0": {
+		functionName: "updateApplicationStatus_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
 	},
 	"ab0f6919d1abc1a6f722233cd57a641cc24c202e51a4b60e04036381156313cb": {
 		functionName: "getBootstrap_createServerFn_handler",
-		importer: () => import("./access-CGyDluqX.mjs")
+		importer: () => import("./access-DioqvHgR.mjs")
 	},
 	"b116b3a6538dda78c590771d4d7c3baad2ff09e555e26cc9a566f49463311ed2": {
 		functionName: "upsertReview_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"b9560c25616c29988c96cc9fa2d984adcd496a36fd9751c1cca10c77098a3347": {
+		functionName: "getSuperAdminDashboard_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"c1db5569404235c31597f22f3305a9d5227aef7a96072cb9cbc23397ff1af32e": {
 		functionName: "listClients_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
 	},
 	"c27d4c67d9b551e7e3d17f895bf95e93275622be48906b0306d07881fa94e5a6": {
 		functionName: "getPayment_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
 	},
 	"c3cb4cf8fb5d688d0766adebc89152d72e18b78ae115d9d2629ce4c187253ca6": {
 		functionName: "listAttendance_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
+	},
+	"c4b8b0e5b5b990f6fc6cda2ba57a3fa8ecb713c6e043a66708bb68e70e444ffb": {
+		functionName: "getPublicJobPostings_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
+	},
+	"cefd777af2826db44231a01cba14377bee9dded3bb723f6de53499bba419454e": {
+		functionName: "listAuditLogs_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"d43827848ef3f91cac3c8d697ec73856ec25fcda2175ef55bfbf9e59293e145c": {
 		functionName: "listPayments_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
+	},
+	"d4c6ec975cfeeec9fbc8896155661a5a5e3a8d1280150b2bcf6c9a1cbd1f8446": {
+		functionName: "upsertJobPosting_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
+	},
+	"d5d56a865f6ffd5858b2087a1366d75d09971025d3a367eae997b5adab9ec704": {
+		functionName: "suspendUser_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
 	},
 	"d6fabe816eb76beb35beaeb5ab9838e9a8da2b6e30092bc8c32f1514d20098b4": {
 		functionName: "upsertProperty_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
+	},
+	"dcbe79a1566b9bf039eea75f955c6727d3fdc8e144f84bf2b780aec4c1d6f02b": {
+		functionName: "resetUserPassword_createServerFn_handler",
+		importer: () => import("./admin-CCj-kQmS.mjs")
+	},
+	"ddc0e15c8fa3da28ed90c8f7e30dbb4bf6d0ccc9f46f81f1a9af714a464d1021": {
+		functionName: "deleteJobPosting_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
 	},
 	"e2babbf7e7c833fff08a5df87db098ff2fc81e42c4fc82c41859bc2ca7444cab": {
 		functionName: "getDeal_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
 	},
 	"e5e17cb4b7700162469edb9e725b220cb72dea7869806246b50e5c159c84c1e4": {
 		functionName: "listTasks_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	},
 	"e7ff071f407541e41e51ee0361709f911fee9a19b9248a7798abf129ac7b4181": {
 		functionName: "createPayment_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
+	},
+	"f16cc6c9cd451a8e6328490c99401dbdf485641809de12c097a489753974dce2": {
+		functionName: "getPublicJobPostingById_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
 	},
 	"f33bbc0e040b4db94f74c4a6ed712eedc1d5b4cd350b1cf7eacdf664f59a5aa5": {
 		functionName: "listProperties_createServerFn_handler",
-		importer: () => import("./crm-DC4SSiu6.mjs")
+		importer: () => import("./crm-B61nj-zI.mjs")
+	},
+	"f68a4c4a5abb78ab3df508212b6f2ca31027da7ebf060d2621d39377bff00acb": {
+		functionName: "listJobPostings_createServerFn_handler",
+		importer: () => import("./jobs-CfbJ2nDo.mjs")
 	},
 	"fe154cb5e78d6438eeaf2df2306295ccb0373d3d6fcf54cdc9c2d2d32c41965d": {
 		functionName: "upsertTask_createServerFn_handler",
-		importer: () => import("./people-Bt3wxJnN.mjs")
+		importer: () => import("./people-PMQjosrG.mjs")
 	}
 };
 async function getServerFnById(id, access) {
@@ -2168,7 +2240,7 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
 	const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-		import("./router-BjCcPgfk.mjs").then((n) => n.t),
+		import("./router-o6QkYaZz.mjs").then((n) => n.t),
 		import("./start-5Z2QO8AU.mjs"),
 		import("./empty-plugin-adapters-D9UWiqvJ.mjs")
 	]);

@@ -2521,6 +2521,20 @@ var DialogTitle = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name
 		ref: forwardedRef
 	});
 }, "DialogTitle"));
+var DialogDescription = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function DialogDescription2(props, forwardedRef) {
+	const { __scopeDialog, ...descriptionProps } = props;
+	const context = useDialogContext("DialogDescription", __scopeDialog);
+	const { setDescriptionCount } = context;
+	useLayoutEffect2(() => {
+		setDescriptionCount((count) => count + 1);
+		return () => setDescriptionCount((count) => count - 1);
+	}, [setDescriptionCount]);
+	return /* @__PURE__ */ (0, import_jsx_runtime.jsx)(Primitive.p, {
+		id: context.descriptionId,
+		...descriptionProps,
+		ref: forwardedRef
+	});
+}, "DialogDescription"));
 var CLOSE_NAME = "DialogClose";
 var DialogClose = /* @__PURE__ */ import_react.forwardRef(/* @__PURE__ */ __name(function DialogClose2(props, forwardedRef) {
 	const { __scopeDialog, ...closeProps } = props;
@@ -2546,4 +2560,4 @@ function getState(open) {
 }
 __name(getState, "getState");
 //#endregion
-export { useId as _, DialogPortal as a, ReactRemoveScroll as c, Portal as d, FocusScope as f, useControllableState as g, Primitive as h, DialogOverlay as i, useFocusGuards as l, useCallbackRef$1 as m, DialogClose as n, DialogTitle as o, DismissableLayer as p, DialogContent as r, hideOthers as s, Dialog as t, Presence as u, __awaiter as v, __rest as y };
+export { __awaiter as C, useId as S, DismissableLayer as _, DialogOverlay as a, dispatchDiscreteCustomEvent as b, hideOthers as c, Presence as d, Portal as f, useFocusScopeBranchRegistry as g, useFocusScopeBranch as h, DialogDescription as i, ReactRemoveScroll as l, FocusScopeBranchProvider as m, DialogClose as n, DialogPortal as o, FocusScope as p, DialogContent as r, DialogTitle as s, Dialog as t, useFocusGuards as u, useCallbackRef$1 as v, __rest as w, useControllableState as x, Primitive as y };
